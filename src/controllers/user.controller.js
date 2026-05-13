@@ -13,7 +13,7 @@ const getAllUsers = async (req, res) => {
 const getUserById = async (req, res) => {
     try {
         const id = req.params.id
-        const user = await User.findByPK(id)
+        const user = await User.findByPk(id)
         res.status(200).json(user)
     } catch (error) {
         console.error(error)
@@ -37,7 +37,7 @@ const putUser = async (req, res) => {
         const id = req.params.id
         const userActualizado = req.body
 
-        const user = await User.findPK(id)
+        const user = await User.findByPk(id)
 
         await user.update(userActualizado)
 
@@ -52,11 +52,11 @@ const putUser = async (req, res) => {
 const deleteUser = async (req, res) => {
     try {
         const id = req.params.id
-        const user = await User.findPK(id)
+        const user = await User.findByPk(id)
 
         await user.destroy()
 
-        res.status(204).json({message: 'Usuario eliminado de la base de datos'})
+        res.status(200).json({message: 'Usuario eliminado de la base de datos'})
 
     } catch (error) {
         console.error(error)

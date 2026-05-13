@@ -7,8 +7,8 @@ router.get('/usuario/:id', getUserById)
 
 router.post('/usuario', postUser)
 
-router.put('/usuario', putUser)
+router.put('/usuario/:id', putUser)
 
-router.delete('/usuario', deleteUser)
+router.delete('/usuario/:id', deleteUser)
 
 module.exports = router
