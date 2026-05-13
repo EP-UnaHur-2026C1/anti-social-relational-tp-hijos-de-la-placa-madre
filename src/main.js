@@ -1,10 +1,13 @@
 const express = require('express');
 const { sequelize } = require('./db/models')
-//const {} = require('./routers')
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const userRouter = require('./routers/router.user')
+
 app.use(express.json()); // Para parsear el cuerpo de las solicitudes como JSON
+
+app.use(userRouter)
 
 app.listen(PORT, async (err) => {
     

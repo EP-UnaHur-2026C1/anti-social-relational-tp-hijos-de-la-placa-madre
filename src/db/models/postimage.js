@@ -4,7 +4,7 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class PostImage extends Model {
-   
+  
     static associate(models) {
 
       // Relación N:1 con Post 

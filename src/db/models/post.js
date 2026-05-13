@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       // 1. Relación N:1 con User
       Post.belongsTo(models.User, { 
         foreignKey: 'idUser',
-         as: 'User' });
+        as: 'User' });
       
       // 2. Relación 1:N con PostImage
       Post.hasMany(models.PostImage, {
