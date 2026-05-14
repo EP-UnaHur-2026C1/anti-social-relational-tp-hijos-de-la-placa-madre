@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
 
       // Relacion N:N con Post
       Tag.belongsToMany(models.Post, { 
-        through: 'PostTags', 
+        through: 'PostTags', // tabla intermedia
         foreignKey: 'idTag', 
         as: 'Posts' 
       });
@@ -17,10 +17,24 @@ module.exports = (sequelize, DataTypes) => {
     
   }
   Tag.init({
-    nombre: DataTypes.STRING
+    idTag: {
+
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false
+    },
+    
+    nombre: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true
+    }
+    
   }, {
     sequelize,
     modelName: 'Tag',
+    timestamps: false
   });
   return Tag;
 };
