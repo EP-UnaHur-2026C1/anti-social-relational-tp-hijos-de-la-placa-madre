@@ -4,10 +4,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 const userRouter = require('./routers/router.user')
+const postRouter = require('./routers/router.post')
 
 app.use(express.json()); // Para parsear el cuerpo de las solicitudes como JSON
 
 app.use(userRouter)
+app.use(postRouter)
 
 app.listen(PORT, (err) => {
     // Si ocurre un error al intentar levantar el servidor
