@@ -2,7 +2,10 @@ const { Post, PostImage } = require('../db/models')
 const { param } = require('../routers/router.user')
 
 
+
+
 // PARA POST IMAGES 
+
 const getAllImages = async (req, res) => {
     try {
     
@@ -87,7 +90,16 @@ const putImages = async (req, res) => {
 
 const deleteImage = async (req, res) => {
     try{
-        
+        const image = await PostImage.findOne({
+            where: {
+                idPost: req.params.postId, 
+                idImage: req.params.imageId             
+            }             
+        })
+
+        await image.destroy()
+        res.status(200).json( {message: 'Foto eliminada '})
+
     }catch(err){
         console.error(err)
         res.status(500).json({ err: 'Error del servidor'})
