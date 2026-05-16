@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       // 1. Relación N:1 con User
       Post.belongsTo(models.User, { 
         foreignKey: 'idUser',
-         as: 'User' });
+        as: 'User' });
       
       // 2. Relación 1:N con PostImage
       Post.hasMany(models.PostImage, {
@@ -32,10 +32,31 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Post.init({
-    descripcion: DataTypes.STRING
-  }, {
+
+    idPost: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false 
+    },
+
+    idUser: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+
+    descripcion: {
+      type: DataTypes.TEXT,
+      length: 100,
+      allowNull: false
+    }
+    
+  }, 
+
+  {
     sequelize,
     modelName: 'Post',
+    timestamps: true
   });
   return Post;
 };
