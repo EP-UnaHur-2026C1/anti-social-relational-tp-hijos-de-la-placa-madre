@@ -1,14 +1,39 @@
 const { Post, PostImage } = require('../db/models')
-const { param } = require('../routers/router.user')
 
+
+
+
+// POST
+
+const getPostById = async ( req, res ) =>{
+
+    try{
+
+        const post = await Post.findByPk(req.params.postId,  // -> buscamos el post por id
+            {
+            include: { // -> pero que incluya: 
+                model: PostImage, // -> el modelo que maneja las imagenes
+                as: 'Images' // -> pero como nombramos a postImages en la relacion post con postImage ( fijarse en el modelo postimage), si no ponemos esto tirar error
+                            // porque no encuentra el modelo
+                }
+            }       
+        ) 
+
+        res.status(200).json(post)
+    }catch(err){
+        console.error(err)
+        console.log(err)
+        res.status(500).json({ error: 'Error del servidor' })
+    }
+
+}
 
 
 
 // PARA POST IMAGES 
 
 const getAllImages = async (req, res) => {
-    try {
-    
+    try {    
         const images = await PostImage.findAll(
             {
                 where: {
@@ -16,7 +41,6 @@ const getAllImages = async (req, res) => {
                 }
             }
         )
-
         res.status(200).json(images)
             
     }catch(err){
@@ -106,5 +130,26 @@ const deleteImage = async (req, res) => {
     }
 }
 
+const deleteAllImages = async ( req, res ) => {
+    try{
 
-module.exports = {  getAllImages, getImageById, postImages, putImages, deleteImage } 
+        const images = await PostImage.findAll({
+            where: {
+                idPost: req.params.postId
+            }            
+        })
+
+        await Promise.all(
+            images.map( i => i.destroy() )
+        )
+
+        res.status(200).json( {message: 'fotos eliminadas'} )
+
+    }catch(err){
+        console.error(err)
+        res.status(500).json({ err: 'Error del servidor'})
+    }
+}
+
+
+module.exports = { getPostById, getAllImages, getImageById, postImages, putImages, deleteImage,deleteAllImages } 

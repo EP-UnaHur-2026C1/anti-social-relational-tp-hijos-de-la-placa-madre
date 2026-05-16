@@ -1,8 +1,10 @@
 const {Router} = require('express')
-const { getAllImages, getImageById, postImages, putImages, deleteImage  } = require('../controllers/post.controllers')
+const { getPostById, getAllImages, getImageById, postImages, putImages, deleteImage,deleteAllImages  } = require('../controllers/post.controllers')
 const router = Router()
 
+// obtener todos los post por id
 
+router.get('/post/:postId', getPostById)
 
 // PARA POST_IMAGES
 
@@ -24,6 +26,10 @@ router.put('/post/:postId/images/:imageId', putImages)
 // borra una imagen del post por id
 
 router.delete('/post/:postId/images/:imageId', deleteImage)
+
+// borra todas las imagenes del post por id
+
+router.delete('/post/:postId/images', deleteAllImages)
 
 
 
