@@ -3,7 +3,7 @@
     "username": "root",
     "password": null,
     "database": "UnaHur_Anti-Social_Net",
-    "host": "data/data.db",
+    "host": "src/db/data/data.db",
     "dialect": "sqlite"
   },
   "test": {
