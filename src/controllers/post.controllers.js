@@ -1,9 +1,16 @@
 const { Post, PostImage } = require('../db/models')
 
-
-
-
 // POST
+
+const getAllPosts = async(req,res)=>{
+    try{
+        const data = await Post.findAll()
+        res.status(200).json(data)
+    }catch(error){
+        console.error(error)
+        res.status(404).json({error : "error del Servidor"})
+    }
+}
 
 const getPostById = async ( req, res ) =>{
 
@@ -27,6 +34,54 @@ const getPostById = async ( req, res ) =>{
     }
 
 }
+
+const postNewPost = async (req, res) =>{
+    try {
+        const newPost = req.body
+
+        const post = await Post.create(newPost)
+        
+        res.status(201).json(post)
+    } catch (error) {
+        
+        console.error(error)
+        res.status(500).json({ error: 'Error del servidor' })
+    }
+}
+const putPost = async(req,res) =>{
+    try{
+        const  id = req.params.id 
+        const postActualizado = req.body
+        
+        const post = await Post.findByPk(id)
+        
+        await post.update(postActualizado)
+        
+        res.status(200).json(post)
+
+    }catch(error){
+        console.error(error)
+        res.status(500).json({ error: 'Error del servidor' })         
+    }
+}
+const deletePost= async (req,res)=>{
+    try{
+        const id = req.params.id
+        const post = await Post.findByPk(id)
+    
+        await post.destroy()
+        
+        res.status(200).json({message: `el post fue eliminado`})
+        
+    }catch(error){
+        
+        console.error(error)
+        res.status(500).json({error: "Error de servidor"})
+
+    }
+}
+
+
 
 
 
@@ -152,4 +207,4 @@ const deleteAllImages = async ( req, res ) => {
 }
 
 
-module.exports = { getPostById, getAllImages, getImageById, postImages, putImages, deleteImage,deleteAllImages } 
+module.exports = { getAllPosts, postNewPost, putPost, deletePost, getPostById, getAllImages, getImageById, postImages, putImages, deleteImage,deleteAllImages } 
