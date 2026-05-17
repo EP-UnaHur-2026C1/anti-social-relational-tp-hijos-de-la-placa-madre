@@ -4,7 +4,12 @@ const { Post, PostImage } = require('../db/models')
 
 const getAllPosts = async(req,res)=>{
     try{
-        const data = await Post.findAll()
+        const data = await Post.findAll(  {
+            include: { 
+                model: PostImage, 
+                as: 'Images' 
+                }
+            }    )
         res.status(200).json(data)
     }catch(error){
         console.error(error)
@@ -16,12 +21,11 @@ const getPostById = async ( req, res ) =>{
 
     try{
 
-        const post = await Post.findByPk(req.params.postId,  // -> buscamos el post por id
+        const post = await Post.findByPk(req.params.postId,  
             {
-            include: { // -> pero que incluya: 
-                model: PostImage, // -> el modelo que maneja las imagenes
-                as: 'Images' // -> pero como nombramos a postImages en la relacion post con postImage ( fijarse en el modelo postimage), si no ponemos esto tirar error
-                            // porque no encuentra el modelo
+            include: { 
+                model: PostImage, 
+                as: 'Images' 
                 }
             }       
         ) 
@@ -135,6 +139,9 @@ const postImages = async (req, res) => {
         }
 
         const image = await PostImage.create(newImagen)
+
+        await actualizarFechaPost_(req.params.postId)
+
         res.status(201).json(newImagen)
 
     }catch(err){
@@ -159,6 +166,8 @@ const putImages = async (req, res) => {
 
     res.status(201).json(image)
 
+    await actualizarFechaPost_(req.params.postId)
+
 
     }catch(err){
         console.error(err)
@@ -177,6 +186,9 @@ const deleteImage = async (req, res) => {
         })
 
         await image.destroy()
+
+        await actualizarFechaPost_(req.params.postId)
+
         res.status(200).json( {message: 'Foto eliminada '})
 
     }catch(err){
@@ -198,6 +210,8 @@ const deleteAllImages = async ( req, res ) => {
             images.map( i => i.destroy() )
         )
 
+        await actualizarFechaPost_(req.params.postId)
+
         res.status(200).json( {message: 'fotos eliminadas'} )
 
     }catch(err){
@@ -206,5 +220,19 @@ const deleteAllImages = async ( req, res ) => {
     }
 }
 
+
+const actualizarFechaPost_ = async (idPost) => { // -> funcion para que cuando se haga un post,put o delete en images o comentario 
+                                                // del post se modifique el campo updatedAt de modelo Post
+
+    
+    const post = await Post.findByPk(idPost); // -> busca el post por id
+
+    post.changed('updatedAt', true); // fuerza a sequelize que modifique el campo updatedAt porque sino lo pasa por alto
+
+    post.updatedAt = new Date(); // modifica el contenido del campo updatedAt con la fecha actual
+
+    await post.save(); // para que impacte en la bd, probe con update pero no cambia la fecha en la bd no se porque
+  
+}
 
 module.exports = { getAllPosts, postNewPost, putPost, deletePost, getPostById, getAllImages, getImageById, postImages, putImages, deleteImage,deleteAllImages } 
