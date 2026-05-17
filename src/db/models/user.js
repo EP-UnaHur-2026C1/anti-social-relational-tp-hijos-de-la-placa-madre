@@ -43,13 +43,30 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       length: 12
+    },
+
+    createdAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+      allowNull: false
+    },
+
+    updatedAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+      allowNull: false
     }
   }, 
 
   {
     sequelize,
     modelName: 'User',
-    timestamps: false,
+    timestamps: true,
+    hooks: {
+      beforeUpdate: (user) => {
+        user.updatedAt = new Date();
+      }
+    }
   }
 );
   return User;

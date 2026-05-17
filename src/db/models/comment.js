@@ -43,6 +43,18 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
 
+    createdAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+      allowNull: false
+    },
+
+    updatedAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+      allowNull: false
+    },
+
     visible: { // el atributo virtual para hacer que sea visible o no
       type: DataTypes.VIRTUAL( DataTypes.BOOLEAN, ['createdAt'] ),
         get: function(){
@@ -62,7 +74,12 @@ module.exports = (sequelize, DataTypes) => {
    {
     sequelize,
     modelName: 'Comment',
-    timestamps: true // para calcular el atributo virtual
+    timestamps: true,
+    hooks: {
+      beforeUpdate: (comment) => {
+        comment.updatedAt = new Date();
+      }
+    }
   });
 
   return Comment;

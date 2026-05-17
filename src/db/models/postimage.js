@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   PostImage.init({
-    idImage:{
+    idPostImage:{
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
@@ -30,11 +30,26 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       unique:true
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+      allowNull: false
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+      allowNull: false
     }
   }, {
     sequelize,
     modelName: 'PostImage',
-    timestamps: false
+    timestamps: true,
+    hooks: {
+      beforeUpdate: (postImage) => {
+        postImage.updatedAt = new Date();
+      }
+    }
   });
   return PostImage;
 };
