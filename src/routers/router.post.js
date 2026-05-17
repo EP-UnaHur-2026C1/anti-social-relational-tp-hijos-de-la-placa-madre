@@ -1,6 +1,6 @@
 const {Router} = require('express')
 const { getPostById, getAllPosts, postNewPost, putPost, deletePost, getAllImages, getImageById, postImages, putImages, deleteImage,deleteAllImages,
-    addTag, 
+    addTag, getAllTagsByPostId, unlinkTag,
 } = require('../controllers/post.controllers')
 const router = Router()
 
@@ -50,5 +50,7 @@ router.delete('/post/:postId/images', deleteAllImages)
 
 // Tags
 router.post('/posts/:postId/tags', addTag);
+router.get('/posts/:postId/tags', getAllTagsByPostId);
+router.delete('/posts/:postId/tags/:tagName', unlinkTag);
 
 module.exports = router

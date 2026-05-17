@@ -271,7 +271,69 @@ const actualizarFechaPost_ = async (idPost) => { // -> funcion para que cuando s
     await post.save(); // para que impacte en la bd, probe con update pero no cambia la fecha en la bd no se porque
 }
 
+const getAllTagsByPostId = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const post = await Post.findByPk(postId, {
+            include: {
+                model: Tag,
+                as: 'Tags',
+                through: {
+                    attributes: []
+                }
+            }
+        });
+
+        res.status(200).json(post.Tags);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Error del servidor' });
+    }
+}
+
+// TODO: validar - Validaciones de este caso de uso en middleware con Zod
+const unlinkTag = async (req, res) => {
+    try {
+        const { postId, tagName } = req.params;
+        const sanitizedTagName = decodeURIComponent(tagName);
+
+        const post = await Post.findByPk(postId);
+        if (!post) {
+            return res.status(404).json({ error: 'Post no encontrado' });
+        }
+
+        const tag = await Tag.findOne({ where: { nombre: sanitizedTagName } });
+        if (!tag) {
+            return res.status(404).json({ error: 'Tag no encontrado' });
+        }
+
+        const linked = await post.hasTag(tag);
+        if (!linked) {
+            return res.status(409).json({
+                error: 'El tag no está vinculado a este post',
+            });
+        }
+
+        await post.removeTag(tag);
+
+        const postsWithTag = await tag.countPosts();
+        let tagRemoved = false;
+        if (postsWithTag === 0) {
+            await tag.destroy();
+            tagRemoved = true;
+        }
+
+        res.status(200).json({
+            message: 'Tag desvinculado del post',
+            tagRemoved,
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Error del servidor' });
+    }
+};
+
 module.exports = { getPostById, getAllImages, getImageById, postImages, putImages, deleteImage,deleteAllImages,
     getAllPosts, postNewPost, putPost, deletePost,
-    addTag
+    addTag, getAllTagsByPostId, unlinkTag,
  } 
