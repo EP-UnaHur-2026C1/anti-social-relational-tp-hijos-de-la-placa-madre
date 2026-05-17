@@ -49,6 +49,18 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       length: 100,
       allowNull: false
+    },
+
+    createdAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+      allowNull: false
+    },
+
+    updatedAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+      allowNull: false
     }
     
   }, 
@@ -56,7 +68,13 @@ module.exports = (sequelize, DataTypes) => {
   {
     sequelize,
     modelName: 'Post',
-    timestamps: true
+    timestamps: true,
+    // Este hook se ejecuta antes de cada actualización de un post para actualizar el campo updatedAt automáticamente
+    hooks: {
+      beforeUpdate: (post) => {
+        post.updatedAt = new Date();
+      }
+    }
   });
   return Post;
 };
