@@ -23,10 +23,11 @@ module.exports = (sequelize, DataTypes) => {
         as: 'Comments' });
       
       // 4. Relación M:N con Tag
-      Post.belongsToMany(models.Tag, { 
-        through: 'PostTags', 
-        foreignKey: 'idPost', 
-        as: 'Tags' 
+      Post.belongsToMany(models.Tag, {
+        through: models.PostTag,
+        foreignKey: 'idPost',
+        otherKey: 'idTag',
+        as: 'Tags',
       });
 
     }

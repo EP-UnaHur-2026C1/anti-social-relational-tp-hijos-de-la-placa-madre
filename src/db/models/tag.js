@@ -8,10 +8,11 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
 
       // Relacion N:N con Post
-      Tag.belongsToMany(models.Post, { 
-        through: 'PostTags', // tabla intermedia
-        foreignKey: 'idTag', 
-        as: 'Posts' 
+      Tag.belongsToMany(models.Post, {
+        through: models.PostTag,
+        foreignKey: 'idTag',
+        otherKey: 'idPost',
+        as: 'Posts',
       });
     }
     
