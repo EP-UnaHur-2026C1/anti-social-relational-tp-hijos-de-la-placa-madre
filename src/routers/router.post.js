@@ -1,5 +1,7 @@
 const {Router} = require('express')
-const { getPostById, getAllImages, getImageById, postImages, putImages, deleteImage,deleteAllImages  } = require('../controllers/post.controllers')
+const { getPostById, getAllImages, getImageById, postImages, putImages, deleteImage,deleteAllImages,
+    addTag, 
+} = require('../controllers/post.controllers')
 const router = Router()
 
 // obtener todos los post por id
@@ -31,6 +33,7 @@ router.delete('/post/:postId/images/:imageId', deleteImage)
 
 router.delete('/post/:postId/images', deleteAllImages)
 
-
+// Tags
+router.post('/posts/:postId/tags', addTag);
 
 module.exports = router
