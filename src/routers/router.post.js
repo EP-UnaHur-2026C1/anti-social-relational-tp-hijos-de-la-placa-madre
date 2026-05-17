@@ -1,12 +1,27 @@
 const {Router} = require('express')
-const { getPostById, getAllImages, getImageById, postImages, putImages, deleteImage,deleteAllImages,
+const { getPostById, getAllPosts, postNewPost, putPost, deletePost, getAllImages, getImageById, postImages, putImages, deleteImage,deleteAllImages,
     addTag, 
 } = require('../controllers/post.controllers')
 const router = Router()
 
 // obtener todos los post por id
+router.get('/posts',getAllPosts)
+
+// obtener un post con cierto id
 
 router.get('/post/:postId', getPostById)
+
+// crear un nuevo post
+
+router.post('/post',postNewPost)
+
+// actualizar un post con id
+
+router.put('/posts/:id',putPost)
+
+// eliminar un post con id
+
+router.delete('/posts/:id',deletePost)
 
 // PARA POST_IMAGES
 
