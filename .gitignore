@@ -1,2 +1,6 @@
 node_modules
 data
+
+# SQLite local (desarrollo)
+src/db/data/*.sqlite
+src/db/data/*.db

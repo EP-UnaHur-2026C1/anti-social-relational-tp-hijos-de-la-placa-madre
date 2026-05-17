@@ -10,14 +10,27 @@ const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
 
 let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
+// Habilitar foreign keys en SQLite
+const sequelizeConfig = { ...config };
+if (config.dialect === 'sqlite') {
+  sequelizeConfig.pool = {
+    ...(config.pool || {}),
+    afterCreate: (conn, done) => {
+      conn.run('PRAGMA foreign_keys = ON', (err) => done(err, conn));
+    },
+  };
 }
 
-// Habilitar foreign keys globalmente
-sequelize.query('PRAGMA foreign_keys = ON');
+if (config.use_env_variable) {
+  sequelize = new Sequelize(process.env[config.use_env_variable], sequelizeConfig);
+} else {
+  sequelize = new Sequelize(
+    config.database,
+    config.username,
+    config.password,
+    sequelizeConfig,
+  );
+}
 
 fs
   .readdirSync(__dirname)

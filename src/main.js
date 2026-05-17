@@ -11,25 +11,16 @@ app.use(express.json()); // Para parsear el cuerpo de las solicitudes como JSON
 app.use(userRouter)
 app.use(postRouter)
 
-app.listen(PORT, (err) => {
-    // Si ocurre un error al intentar levantar el servidor
-    if (err) {
-        console.error("Error al iniciar el servidor:", err.message);
-        process.exit(1); // Finaliza el proceso de Node con un código de error
+app.listen(PORT, async () => {
+    try {
+        await sequelize.authenticate();
+        console.log('Conexión a la base de datos verificada.');
+        console.log(`Aplicación iniciada exitosamente en el puerto: ${PORT}`);
+    } catch (error) {
+        console.error('Error al conectar con la base de datos:', error);
+        process.exit(1);
     }
-
-    /**
-     * sequelize.sync({ force: true })
-     * Sincroniza los modelos con la base de datos.
-     * ATENCIÓN: { force: true } elimina las tablas existentes y las recrea. 
-     * Úsalo solo en etapa de desarrollo.
-     */
-    sequelize.sync({ force: false })
-        .then(() => {
-            console.log('Base de datos sincronizada correctamente.');
-            console.log(`Aplicación iniciada exitosamente en el puerto: ${PORT}`);
-        })
-        .catch((error) => {
-            console.error('Error al sincronizar la base de datos:', error);
-        });
+}).on('error', (err) => {
+    console.error('Error al iniciar el servidor:', err.message);
+    process.exit(1);
 });
