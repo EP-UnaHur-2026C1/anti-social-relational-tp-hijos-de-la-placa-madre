@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
-// Definimos el esquema de validación para la creación de un usuario (POST)
-const userCreateSchema = Joi.object({
+// Definimos el esquema de validación para un usuario (POST y PUT)
+const userSchema = Joi.object({
     nickName: Joi.string()
         .alphanum() // Solo letras y números (sin espacios ni caracteres raros)
         .max(20)    // Coincide con el length: 20 de tu base de datos
@@ -32,5 +32,5 @@ const userCreateSchema = Joi.object({
 });
 
 module.exports = {
-    userCreateSchema
+    userSchema
 };
