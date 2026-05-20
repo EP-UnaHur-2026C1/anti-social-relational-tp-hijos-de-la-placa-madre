@@ -122,6 +122,8 @@ const getImageById = async (req, res) => {
 
         res.status(200).json(image)
 
+        // res.redirect(image.url) // -> esto es para mostrar la imagen por navegador
+
     }catch(err){
 
         console.error(err)
@@ -133,16 +135,18 @@ const getImageById = async (req, res) => {
 const postImages = async (req, res) => {
     try{
 
-        const newImagen = {
-            ...req.body,
-            idPost: req.params.postId
-        }
+        const {urlImages} = req.body 
 
-        const image = await PostImage.create(newImagen)
+        const newImages= urlImages.map( url => ({
+            url: url,
+            idPost: req.params.postId
+        })) 
+        
+        await PostImage.bulkCreate(newImages)
 
         await actualizarFechaPost_(req.params.postId)
 
-        res.status(201).json(newImagen)
+        res.status(201).json({message: 'Fotos agregadas correctamente'})
 
     }catch(err){
 
@@ -155,16 +159,18 @@ const postImages = async (req, res) => {
 const putImages = async (req, res) => {
    try{
     
-    const image = await PostImage.findOne({ // -> buscamos la foto por id del post y id de la imagen
+    const image = await PostImage.findOne({ 
         where:{
-            idPost: req.params.postId, // -> donde el id del post sea el recibido por URL
-            idImage: req.params.imageId // -> y donde el id de la foto sea el recibido por URL
+            idPost: req.params.postId,
+            idImage: req.params.imageId 
         }
     })
 
-    await image.update(req.body) // -> se hace la actualizacion de la foto que recibe por body
+    await image.update({
+        url: req.body.urlImages[0]
+    }) 
 
-    res.status(201).json(image)
+    res.status(201).json(req.body.urlImages[0])
 
     await actualizarFechaPost_(req.params.postId)
 
