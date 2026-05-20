@@ -22,9 +22,28 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   User.init({
-    nickName: DataTypes.STRING,
-    nombre: DataTypes.STRING,
-    apellido: DataTypes.STRING
+    idUser:{
+      type: DataTypes.INTEGER,
+      primaryKey: true, // Define 'idUser' como clave primaria
+      autoIncrement: true, // Habilita auto-incremento para 'idUser'
+      allowNull: false // No permite valores nulos en 'idUser'
+    },
+    nickName: {
+      type: DataTypes.STRING,
+      unique: true, // Asegura que el 'nickName' sea único en la base de datos
+      allowNull: false,
+      length: 20
+    },
+    nombre: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      length: 12
+    },
+    apellido: {      
+      type: DataTypes.STRING,
+      allowNull: false,
+      length: 12
+    }
   }, {
     sequelize,
     modelName: 'User',
