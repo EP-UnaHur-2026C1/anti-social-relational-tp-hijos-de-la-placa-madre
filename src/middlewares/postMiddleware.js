@@ -23,4 +23,4 @@ const validarSchemaPost = (req,res,next) =>{
     next()
 }
 
-module.exports ={validarPostById}
+module.exports ={validarPostById,validarSchemaPost}

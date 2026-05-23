@@ -6,7 +6,7 @@ const validarById = (modelo) =>{
     return (req,res,next) =>{
         const id = req.params.id
         
-        const instance = await modelo.findByPK(id)
+        const instance =  modelo.findByPK(id)
 
         if(!instance){
             res.status(400).json({error_message: `el id ${id} no se fue encontrado`})

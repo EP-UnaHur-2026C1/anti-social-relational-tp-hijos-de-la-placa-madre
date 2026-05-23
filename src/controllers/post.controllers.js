@@ -1,4 +1,4 @@
-const { Post, PostImage } = require('../db/models')
+const { Post, PostImage,Tag } = require('../db/models')
 
 // POST
 
@@ -220,6 +220,31 @@ const deleteAllImages = async ( req, res ) => {
     }
 }
 
+// Post_Tags
+
+const getAllTagsByIdPost = async(req,res) =>{
+    const idPost = req.params.postId
+    const post = await Post.findOne({
+        where:{idPost : idPost},
+        include:[
+            {
+                model:Tag,
+                as: 'Tags'
+            }
+        ]
+    })
+    res.status(200).json(post)
+}
+
+const getTagByIdInPost = async(req,res) =>{
+    const idPost = req.params.idPost
+    const idTag = req.params.idTag
+
+    const data = await  Tag.findOne({
+        where:{idPost : idPost, idTag : idTag}
+    })
+    res.status(200).json(data)
+}
 
 const actualizarFechaPost_ = async (idPost) => { // -> funcion para que cuando se haga un post,put o delete en images o comentario 
                                                 // del post se modifique el campo updatedAt de modelo Post
@@ -235,4 +260,4 @@ const actualizarFechaPost_ = async (idPost) => { // -> funcion para que cuando s
   
 }
 
-module.exports = { getAllPosts, postNewPost, putPost, deletePost, getPostById, getAllImages, getImageById, postImages, putImages, deleteImage,deleteAllImages } 
+module.exports = { getAllPosts, postNewPost, putPost, deletePost, getPostById, getAllImages, getImageById, postImages, putImages, deleteImage,deleteAllImages,getAllTagsByIdPost } 

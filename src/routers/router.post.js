@@ -1,6 +1,6 @@
 const {Router} = require('express')
-const { getPostById, getAllPosts, postNewPost, putPost, deletePost, getAllImages, getImageById, postImages, putImages, deleteImage,deleteAllImages  } = require('../controllers/post.controllers')
-const {validarPostById} = require('../middlewares/postMiddleware')
+const { getPostById, getAllPosts, postNewPost, putPost, deletePost, getAllImages, getImageById, postImages, putImages, deleteImage,deleteAllImages,getAllTagsByIdPost  } = require('../controllers/post.controllers')
+const {validarPostById,validarSchemaPost} = require('../middlewares/postMiddleware')
 const router = Router()
 
 // obtener todos los post por id
@@ -12,15 +12,15 @@ router.get('/post/:postId',validarPostById,getPostById)
 
 // crear un nuevo post
 
-router.post('/post',postNewPost)
+router.post('/post',validarSchemaPost,postNewPost)
 
 // actualizar un post con id
 
-router.put('/posts/:id',validarPostById,putPost)
+router.put('/posts/:id',validarPostById,validarSchemaPost,putPost)
 
 // eliminar un post con id
 
-router.delete('/posts/:id',validarPostById,deletePost)
+router.delete('/posts/:id',deletePost)
 
 // PARA POST_IMAGES
 
@@ -47,6 +47,10 @@ router.delete('/post/:postId/images/:imageId', deleteImage)
 // borra todas las imagenes del post por id
 
 router.delete('/post/:postId/images', deleteAllImages)
+
+//encuentra todos los tag que le pertenece a un post con id definido
+
+router.get('/post/:postId/tags',getAllTagsByIdPost)
 
 
 
