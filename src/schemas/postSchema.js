@@ -3,10 +3,11 @@ const Joi = require('joi')
 //y que condiciones debe de tener    
 
 const postSchema = Joi.object({
-    idUser: Joi.integer().min(1).required().messages({
-        "integer.empty": "el idUser no puede estar vacio",
-        "integer.min" : "el idUser no puede ser menor a 1",
-        "integer.required": "el atributo debe existir"
+    idUser: Joi.number().integer().min(1).required().messages({
+        "number.base": "el idUser debe ser un numero",
+        "number.integer": "el idUser debe ser un entero",
+        "number.min": "el idUser no puede ser menor a 1",
+        "any.required": "el atributo debe existir"
     }),
     nombre: Joi.string().min(3).max(20).required().messages({
         "string.empty":"el nombre no puede estar vacio",

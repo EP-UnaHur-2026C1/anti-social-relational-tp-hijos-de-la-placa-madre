@@ -46,7 +46,7 @@ router.post('/post/:postId/images', validarPostById, schemaValidator(schemaImage
 
 // modifica una imagen por id (?)
 
-router.put('/post/:postId/images/:imageId',validarPostByIdm, validateImageExists,validateImageExists, 
+router.put('/post/:postId/images/:imageId',validarPostById, validateImageExists,validateImageExists, 
                                             schemaValidator(schemaImage.Schema), validatePutImage, putImages)
 
 // borra una imagen del post por id

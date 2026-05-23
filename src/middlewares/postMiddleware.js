@@ -4,7 +4,7 @@ const postSchema = require('../schemas/postSchema')
 const genericSchemaValidator = require('../schemas/genericSchemaValidator')
 
 
-const validarPostById = validarById(Post)
+const validarPostById = validarById(Post, 'postId')
 
 const validarSchemaPost = (req,res,next) =>{
     const {error,_} =  genericSchemaValidator(postSchema,req.body)
