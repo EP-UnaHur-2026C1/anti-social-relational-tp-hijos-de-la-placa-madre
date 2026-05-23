@@ -40,16 +40,16 @@ router.get('/post/:postId/images/:imageId',validarPostById, validatePostImageId,
 
 // agregar imagenes al post, una o muchas
 
-router.post('/post/:postId/images', /*validar que postId sea un numero y que exista,*/ schemaValidator(schemaImage.Schema) ,postImages)
+router.post('/post/:postId/images', validarPostById, schemaValidator(schemaImage.Schema) ,postImages)
 
 // modifica una imagen por id (?)
 
-router.put('/post/:postId/images/:imageId',/*validar que postId sea un numero y que exista,*/ validatePathParameterPostImage,validateImageExists, 
+router.put('/post/:postId/images/:imageId',validarPostByIdm, validateImageExists,validateImageExists, 
                                             schemaValidator(schemaImage.Schema), validatePutImage, putImages)
 
 // borra una imagen del post por id
 
-router.delete('/post/:postId/images/:imageId',/*validar que postId sea un numero y que exista,*/ validatePathParameterPostImage, validateImageExists, deleteImage)
+router.delete('/post/:postId/images/:imageId',/*validar que postId sea un numero y que exista,*/ validateImageExists, validateImageExists, deleteImage)
 
 // borra todas las imagenes del post por id
 
