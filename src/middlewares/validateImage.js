@@ -2,7 +2,7 @@
 const {PostImage} = require('../db/models')
 
 
-const validatePathParameterPostImage = (req, res, next) => {
+const validatePostImageId = (req, res, next) => {
     const id = req.params.imageId
 
     if(isNaN(id)){
