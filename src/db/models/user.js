@@ -11,12 +11,14 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Post, {
         foreignKey: "idUser",
         as: "posts",
+        onDelete: 'CASCADE', // <-- CLAVE: Si se borra el usuario, borra sus posts
       });
 
       // 2. Relación 1:M con Comment
       User.hasMany(models.Comment, {
         foreignKey: "idUser",
         as: "comments",
+        onDelete: 'CASCADE',
       });
 
     }
