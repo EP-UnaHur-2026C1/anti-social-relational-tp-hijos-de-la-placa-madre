@@ -1,11 +1,12 @@
 const {Router} = require('express')
 const { getPostById, getAllPosts, postNewPost, putPost, deletePost, getAllImages, getImageById, postImages, putImages, deleteImage,deleteAllImages  } = require('../controllers/post.controllers')
+const {validarPostById} = require('../middlewares/postMiddleware')
 const router = Router()
 const schemaValidator = require('../middlewares/schemaValidator')
 
 // para validar schema de imagenes
 const schemaImage  = require('../schemas/postimage.schema')
-const {validatePathParameterPostImage, validateImageExists, validatePutImage } = require('../middlewares/validateImage')
+const {validatePostImageId, validateImageExists, validatePutImage } = require('../middlewares/validateImage')
 
 
 // obtener todos los post por id
@@ -13,7 +14,7 @@ router.get('/posts',getAllPosts)
 
 // obtener un post con cierto id
 
-router.get('/post/:postId', getPostById)
+router.get('/post/:postId',validarPostById,getPostById)
 
 // crear un nuevo post
 
@@ -21,20 +22,21 @@ router.post('/post',postNewPost)
 
 // actualizar un post con id
 
-router.put('/posts/:id',putPost)
+router.put('/posts/:id',validarPostById,putPost)
 
 // eliminar un post con id
 
-router.delete('/posts/:id',deletePost)
+router.delete('/posts/:id',validarPostById,deletePost)
 
 // PARA POST_IMAGES
 
 // obtener todas las imagenes de un post
-router.get('/post/:postId/images',/*validar que postId sea un numero y que exista,*/getAllImages)
+ 
+router.get('/post/:postId/images', validarPostById, getAllImages)
 
 // obtiene una imagen del post por id (?)
 
-router.get('/post/:postId/images/:imageId',/*validar que postId sea un numero y que exista,*/validatePathParameterPostImage, validateImageExists, getImageById)
+router.get('/post/:postId/images/:imageId',validarPostById, validatePostImageId, validateImageExists, getImageById)
 
 // agregar imagenes al post, una o muchas
 

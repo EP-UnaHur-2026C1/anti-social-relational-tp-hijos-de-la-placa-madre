@@ -52,4 +52,4 @@ const validatePutImage = async (req,res,next) => {
 }
 
 
-module.exports = { validatePathParameterPostImage, validateImageExists, validatePutImage }
+module.exports = { validatePostImageId, validateImageExists, validatePutImage }
