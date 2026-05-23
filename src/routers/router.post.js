@@ -1,5 +1,6 @@
 const {Router} = require('express')
 const { getPostById, getAllPosts, postNewPost, putPost, deletePost, getAllImages, getImageById, postImages, putImages, deleteImage,deleteAllImages  } = require('../controllers/post.controllers')
+const {validarPostById} = require('../middlewares/postMiddleware')
 const router = Router()
 
 // obtener todos los post por id
@@ -7,7 +8,7 @@ router.get('/posts',getAllPosts)
 
 // obtener un post con cierto id
 
-router.get('/post/:postId', getPostById)
+router.get('/post/:postId',validarPostById,getPostById)
 
 // crear un nuevo post
 
@@ -15,20 +16,21 @@ router.post('/post',postNewPost)
 
 // actualizar un post con id
 
-router.put('/posts/:id',putPost)
+router.put('/posts/:id',validarPostById,putPost)
 
 // eliminar un post con id
 
-router.delete('/posts/:id',deletePost)
+router.delete('/posts/:id',validarPostById,deletePost)
 
 // PARA POST_IMAGES
 
 // obtener todas las imagenes de un post
-router.get('/post/:postId/images', getAllImages)
+router.get('/post/:postId/images',validarPostById, getAllImages)
 
 // obtiene una imagen del post por id (?)
 
-router.get('/post/:postId/images/:imageId', getImageById)
+//como le pasamos el middleware de validar "postId" tambien podriamos pasarle uno para "imageId"
+router.get('/post/:postId/images/:imageId',validarPostById, getImageById)
 
 // agregar imagenes al post, una o muchas
 
