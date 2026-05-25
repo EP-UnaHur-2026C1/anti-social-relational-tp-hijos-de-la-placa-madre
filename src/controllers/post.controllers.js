@@ -228,19 +228,10 @@ const deleteAllImages = async ( req, res ) => {
 
 const addTag = async (req, res) => {
     try {
-        const { postId } = req.params;
         const { tagName } = req.body;
 
-        // TODO: validar - Validaciones de este caso de uso en middleware con Zod
-        // Buscar el post por su ID
-        const post = await Post.findByPk(postId);
-        if (!post) {
-            return res.status(404).json({ error: 'Post no encontrado' });
-        }
+        const post = req.instance;
 
-        // TODO: validar - Transformar en middleware de validación con Zod
-        // Buscar o crear el tag por su nombre
-        // Docs: https://sequelize.org/docs/v6/core-concepts/model-querying-finders/#findorcreate
         let [tag, created] = await Tag.findOrCreate({
             where: { nombre: tagName },
             defaults: { nombre: tagName }
@@ -297,21 +288,10 @@ const getAllTagsByPostId = async (req, res) => {
     }
 }
 
-// TODO: validar - Validaciones de este caso de uso en middleware con Zod
 const unlinkTag = async (req, res) => {
     try {
-        const { postId, tagName } = req.params;
-        const sanitizedTagName = decodeURIComponent(tagName);
-
-        const post = await Post.findByPk(postId);
-        if (!post) {
-            return res.status(404).json({ error: 'Post no encontrado' });
-        }
-
-        const tag = await Tag.findOne({ where: { nombre: sanitizedTagName } });
-        if (!tag) {
-            return res.status(404).json({ error: 'Tag no encontrado' });
-        }
+        const post = req.instance;
+        const tag = req.tag;
 
         const linked = await post.hasTag(tag);
         if (!linked) {

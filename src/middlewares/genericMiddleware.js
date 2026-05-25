@@ -7,14 +7,14 @@ const validarById = (modelo, paramName = 'id') => {
         const id = req.params[paramName]
 
         if (!id) {
-            res.status(400).json({ error_message: `el id ${paramName} no se fue encontrado` })
+            res.status(400).json({ error_message: `El parametro ${paramName} es requerido` })
             return
         }
 
         const instance = await modelo.findByPk(id)
 
         if (!instance) {
-            res.status(400).json({ error_message: `el id ${id} no se fue encontrado` })
+            res.status(404).json({ error_message: `El ${modelo.name} con id ${id} no existe` })
             return
         }
 
@@ -23,4 +23,27 @@ const validarById = (modelo, paramName = 'id') => {
     }
 }
 
-module.exports = { validarById }
+const validarByColumn = (modelo, columnName, paramName, options = {}) => {
+    const { instanceKey = 'instance', source = 'params' } = options
+
+    return async (req, res, next) => {
+        let value = source === 'body' ? req.body[paramName] : req.params[paramName]
+
+        if (value === undefined || value === null || value === '') {
+            res.status(400).json({ error_message: `El parametro ${paramName} es requerido` })
+            return
+        }
+
+        const instance = await modelo.findOne({ where: { [columnName]: value } })
+
+        if (!instance) {
+            res.status(404).json({ error_message: `El ${modelo.name} con ${columnName} "${value}" no existe` })
+            return
+        }
+
+        req[instanceKey] = instance
+        next()
+    }
+}
+
+module.exports = { validarById, validarByColumn }
