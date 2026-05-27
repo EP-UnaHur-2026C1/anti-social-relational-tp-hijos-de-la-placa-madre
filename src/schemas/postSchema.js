@@ -2,7 +2,7 @@ const Joi = require('joi')
 //en este archivo definiremos los schemas de Objeto post, en este caso un schemas con los atributos
 //y que condiciones debe de tener    
 
-const postSchema = Joi.object({
+const schemaPost = Joi.object({
     idUser: Joi.number().integer().min(1).required().messages({
         "number.base": "el idUser debe ser un numero",
         "number.integer": "el idUser debe ser un entero",
@@ -23,4 +23,4 @@ const postSchema = Joi.object({
     })
 })
 
-module.exports = postSchema
+module.exports = { schemaPost }

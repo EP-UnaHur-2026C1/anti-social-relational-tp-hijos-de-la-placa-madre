@@ -1,6 +1,6 @@
 const Joi = require('joi')
 
-const Schema = Joi.object({
+const schemaTag = Joi.object({
     tagName: Joi.string().min(1).max(255).required().messages({
         'string.base': 'El nombre del tag debe ser un string',
         'string.empty': 'El nombre del tag no puede estar vacío',
@@ -10,4 +10,4 @@ const Schema = Joi.object({
     }),
 })
 
-module.exports = { Schema }
+module.exports = { schemaTag }

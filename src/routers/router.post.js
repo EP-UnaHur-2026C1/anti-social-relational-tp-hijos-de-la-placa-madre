@@ -9,12 +9,12 @@ const { getPostById, getAllPosts, postNewPost, putPost, deletePost, getAllImages
 
 // Middlewares
 const {validateExistsModel, validarTagByName } = require('../middlewares/genericMiddleware')
-const { validateSchema } = require('../middlewares/validateSchema')
 const { sanitizeTagName } = require('../middlewares/tagMiddleware')
 
 
 // Schemas
-const { schemaPost } = require('../schemas/post.schema')
+const { validateSchema } = require('../schemas/genericSchemaValidator')
+const { schemaPost } = require('../schemas/postSchema')
 const { schemaImage }  = require('../schemas/postImage.schema')
 const { schemaTag } = require('../schemas/tag.schema')
 

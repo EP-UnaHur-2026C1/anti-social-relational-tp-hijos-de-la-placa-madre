@@ -1,7 +1,7 @@
 const Joi = require("joi")
 
 
-const Schema = Joi.object({
+const schemaPostImage = Joi.object({
     urlImages: Joi.array()
     .items(
         Joi.string().uri().min(1).max(200).required().messages({
@@ -21,4 +21,4 @@ const Schema = Joi.object({
 })
 
 
-module.exports = { Schema }
+module.exports = { schemaPostImage }
