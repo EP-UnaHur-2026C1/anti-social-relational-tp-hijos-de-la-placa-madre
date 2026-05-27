@@ -157,12 +157,12 @@ const postImages = async (req, res) => {
 }
 
 const putImages = async (req, res) => {
-   try{
+    try{
     
     const image = await PostImage.findOne({ 
         where:{
             idPost: req.params.postId,
-            idImage: req.params.imageId 
+            idPostImage: req.params.imageId // <-- CAMBIADO: De idImage a idPostImage 
         }
     })
 
@@ -267,14 +267,17 @@ const addTag = async (req, res) => {
 }
 
 const actualizarFechaPost_ = async (idPost) => { // -> funcion para que cuando se haga un post,put o delete en images o comentario 
+
     // del post se modifique el campo updatedAt de modelo Post
     const post = await Post.findByPk(idPost); // -> busca el post por id
+
 
     post.changed('updatedAt', true); // fuerza a sequelize que modifique el campo updatedAt porque sino lo pasa por alto
 
     post.updatedAt = new Date(); // modifica el contenido del campo updatedAt con la fecha actual
 
     await post.save(); // para que impacte en la bd, probe con update pero no cambia la fecha en la bd no se porque
+
 }
 
 const getAllTagsByPostId = async (req, res) => {

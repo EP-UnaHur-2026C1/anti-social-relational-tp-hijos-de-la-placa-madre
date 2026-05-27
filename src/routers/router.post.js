@@ -3,6 +3,7 @@ const { getPostById, getAllPosts, postNewPost, putPost, deletePost, getAllImages
     addTag, getAllTagsByPostId, unlinkTag,
 } = require('../controllers/post.controllers')
 const {validarPostById} = require('../middlewares/postMiddleware')
+const {validarPathParameterMiddleware, validateExistsModel} = require('../middlewares/validateExists')
 const router = Router()
 const schemaValidator = require('../middlewares/schemaValidator')
 
@@ -35,11 +36,11 @@ router.get('/post/:postId/images', validarPostById, getAllImages)
 router.get('/post/:postId/images/:imageId',validarPostById, validatePostImageId, validateImageExists, getImageById)
 
 // agregar imagenes al post, una o muchas
-router.post('/post/:postId/images', validarPostById, schemaValidator(schemaImage.Schema) ,postImages)
+router.post('/post/:postId/images', validarPathParameterMiddleware, schemaValidator(schemaImage.Schema) ,postImages)
 
 // modifica una imagen por id (?)
-router.put('/post/:postId/images/:imageId',validarPostById, validateImageExists,validateImageExists, 
-                                            schemaValidator(schemaImage.Schema), validatePutImage, putImages)
+router.put('/post/:postId/images/:imageId',validarPostById, validateImageExists, 
+                                            schemaValidator(schemaImage.Schema), validatePutImage, putImages) // Habia dos validaciones de existencia, elimine una de ellas, la otra validacion de existencia es para validar que la imagen exista antes de modificarla
 
 // borra una imagen del post por id
 router.delete('/post/:postId/images/:imageId',/*validar que postId sea un numero y que exista,*/ validateImageExists, validateImageExists, deleteImage)

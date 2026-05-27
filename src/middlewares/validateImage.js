@@ -35,7 +35,7 @@ const validatePutImage = async (req,res,next) => {
     }
 
     const newImagen = urlImages[0]
-  
+
     const existe = await PostImage.findOne({
         where: {
             idPost: idPost,
