@@ -1,6 +1,7 @@
 const {Router} = require('express')
 const { getPostById, getAllPosts, postNewPost, putPost, deletePost, getAllImages, getImageById, postImages, putImages, deleteImage,deleteAllImages  } = require('../controllers/post.controllers')
 const {validarPostById} = require('../middlewares/postMiddleware')
+const { validarCreateComment, validarUpdateComment } = require('../middlewares/commentMiddleware')
 const router = Router()
 
 // obtener todos los post por id
@@ -47,7 +48,6 @@ router.delete('/post/:postId/images/:imageId', deleteImage)
 // borra todas las imagenes del post por id
 
 router.delete('/post/:postId/images', deleteAllImages)
-
 
 
 module.exports = router

@@ -2,15 +2,15 @@
 //estos podemos exportarlos y usarlos en middlewares orientados a ciertos objetos
 
 const validarById = (modelo) =>{
-    //la funcion la ejecutara el modelo que la utilize por eso podemos  conseguir la "id" facilmente
-    return (req,res,next) =>{
-        const id = req.params.id
+    return async (req,res,next) =>{
+        const id = req.params.id || req.params.postId || req.params.post_id
         
-        const instance = await modelo.findByPK(id)
+        const instance = await modelo.findByPk(id)
 
         if(!instance){
-            res.status(400).json({error_message: `el id ${id} no se fue encontrado`})
+            return res.status(404).json({error_message: `el id ${id} no fue encontrado`})
         }
+
         next()
     }
 }
