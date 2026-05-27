@@ -3,12 +3,12 @@ const { getPostById, getAllPosts, postNewPost, putPost, deletePost, getAllImages
     addTag, getAllTagsByPostId, unlinkTag,
 } = require('../controllers/post.controllers')
 const {validarPostById} = require('../middlewares/postMiddleware')
-const {validarPathParameterMiddleware, validateExistsModel} = require('../middlewares/validateExists')
 const router = Router()
 const schemaValidator = require('../middlewares/schemaValidator')
 
 // para validar schema de imagenes
-const schemaImage  = require('../schemas/postimage.schema')
+const schemaImage  = require('../schemas/postImage.schema')
+const schemaTag = require('../schemas/tag.schema')
 const {validatePostImageId, validateImageExists, validatePutImage } = require('../middlewares/validateImage')
 
 
@@ -49,8 +49,8 @@ router.delete('/post/:postId/images/:imageId',/*validar que postId sea un numero
 router.delete('/post/:postId/images',/*validar que postId sea un numero y que exista,*/ deleteAllImages)
 
 // Tags
-router.post('/posts/:postId/tags', addTag);
-router.get('/posts/:postId/tags', getAllTagsByPostId);
-router.delete('/posts/:postId/tags/:tagName', unlinkTag);
+router.post('/posts/:postId/tags', validarPostById, sanitizeTagName, schemaValidator(schemaTag.Schema), addTag);
+router.get('/posts/:postId/tags', validarPostById, getAllTagsByPostId);
+router.delete('/posts/:postId/tags/:tagName', validarPostById, sanitizeTagName, validarTagByName, unlinkTag);
 
 module.exports = router

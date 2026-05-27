@@ -1,10 +1,11 @@
-const {Post} = require('../db/models')
-const {validarById} = require('./genericMiddleware')
+const { Post, Tag } = require('../db/models')
+const { validarById, validarByColumn } = require('./genericMiddleware')
 const postSchema = require('../schemas/postSchema')
 const genericSchemaValidator = require('../schemas/genericSchemaValidator')
 
 
 const validarPostById = validarById(Post, 'postId')
+const validarTagByName = validarByColumn(Tag, 'nombre', 'tagName', { instanceKey: 'tag' })
 
 const validarSchemaPost = (req,res,next) =>{
     const {error,_} =  genericSchemaValidator(postSchema,req.body)
@@ -23,4 +24,4 @@ const validarSchemaPost = (req,res,next) =>{
     next()
 }
 
-module.exports ={validarPostById}
+module.exports = { validarPostById, validarTagByName }
