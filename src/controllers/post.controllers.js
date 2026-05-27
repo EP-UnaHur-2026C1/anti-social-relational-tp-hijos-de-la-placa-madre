@@ -1,15 +1,28 @@
-const { Post, PostImage, Tag } = require('../db/models')
+const { Post, PostImage, Tag, Comment } = require('../db/models')
 
 // POST
 
 const getAllPosts = async(req,res)=>{
     try{
-        const data = await Post.findAll(  {
-            include: { 
+        const data = await Post.findAll({
+            include: [
+                { 
                 model: PostImage, 
-                as: 'Images' 
+                as: 'Images'
+                },
+                {
+                    model: Tag,
+                    as: 'Tags',
+                    through: {
+                        attributes: []
+                    }
+                },
+                {
+                    model: Comment,
+                    as: 'Comments'
                 }
-            }    )
+            ]
+            })
         res.status(200).json(data)
     }catch(error){
         console.error(error)
@@ -84,10 +97,6 @@ const deletePost= async (req,res)=>{
 
     }
 }
-
-
-
-
 
 // PARA POST IMAGES 
 
@@ -183,54 +192,46 @@ const putImages = async (req, res) => {
 }
 
 const deleteImage = async (req, res) => {
-    try{
-        const image = await PostImage.findOne({
-            where: {
-                idPost: req.params.postId, 
-                idImage: req.params.imageId             
-            }             
-        })
+    try {
+        const image = req.modelo; 
 
-        await image.destroy()
+        await image.destroy();
 
-        await actualizarFechaPost_(req.params.postId)
+        await actualizarFechaPost_(req.params.postId);
 
-        res.status(200).json( {message: 'Foto eliminada '})
+        return res.status(200).json({ message: 'Foto eliminada con éxito' });
 
-    }catch(err){
+    } catch (err) {
         console.error(err)
-        res.status(500).json({ err: 'Error del servidor'})
+        return res.status(500).json({ err: 'Error del servidor' });
     }
-}
+};
 
-const deleteAllImages = async ( req, res ) => {
-    try{
+const deleteAllImages = async (req, res) => {
+    try {
+        const { postId } = req.params;
 
-        const images = await PostImage.findAll({
+        await PostImage.destroy({
             where: {
-                idPost: req.params.postId
-            }            
-        })
+                idPost: postId
+            }
+        });
 
-        await Promise.all(
-            images.map( i => i.destroy() )
-        )
+        await actualizarFechaPost_(postId);
 
-        await actualizarFechaPost_(req.params.postId)
+        return res.status(200).json({ message: 'Todas las fotos del posteo fueron eliminadas' });
 
-        res.status(200).json( {message: 'fotos eliminadas'} )
-
-    }catch(err){
+    } catch (err) {
         console.error(err)
-        res.status(500).json({ err: 'Error del servidor'})
+        return res.status(500).json({ err: 'Error del servidor' });
     }
-}
+};
 
 const addTag = async (req, res) => {
     try {
         const { tagName } = req.body;
 
-        const post = req.instance;
+        const post = req.modelo;
 
         let [tag, created] = await Tag.findOrCreate({
             where: { nombre: tagName },
@@ -293,7 +294,7 @@ const getAllTagsByPostId = async (req, res) => {
 
 const unlinkTag = async (req, res) => {
     try {
-        const post = req.instance;
+        const post = req.modelo;
         const tag = req.tag;
 
         const linked = await post.hasTag(tag);
@@ -325,4 +326,4 @@ const unlinkTag = async (req, res) => {
 module.exports = { getPostById, getAllImages, getImageById, postImages, putImages, deleteImage,deleteAllImages,
     getAllPosts, postNewPost, putPost, deletePost,
     addTag, getAllTagsByPostId, unlinkTag,
- } 
+} 

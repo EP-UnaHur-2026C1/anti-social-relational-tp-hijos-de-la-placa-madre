@@ -2,7 +2,7 @@ const Joi = require("joi")
 
 
 const Schema = Joi.object({
-   urlImages: Joi.array()
+    urlImages: Joi.array()
     .items(
         Joi.string().uri().min(1).max(200).required().messages({
             "string.base" : "Cada URL debe ser un string",

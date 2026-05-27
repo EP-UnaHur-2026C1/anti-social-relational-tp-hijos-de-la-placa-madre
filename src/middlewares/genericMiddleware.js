@@ -1,29 +1,40 @@
 // Creo un archivo donde colocare todas los middlewares genericos 
 //estos podemos exportarlos y usarlos en middlewares orientados a ciertos objetos
 
-const validarById = (modelo, paramName = 'id') => {
-    // la funcion la ejecutara el modelo que la utilize por eso podemos conseguir la "id" facilmente
+const { Post, Tag } = require('../db/models')
+const postSchema = require('../schemas/postSchema')
+const genericSchemaValidator = require('../schemas/genericSchemaValidator')
+
+const validateExistsModel = (Modelo, paramName = 'id') => {
     return async (req, res, next) => {
-        const id = req.params[paramName]
+        try {
+            const id = req.params[paramName];
 
-        if (!id) {
-            res.status(400).json({ error_message: `El parametro ${paramName} es requerido` })
-            return
-        }
+            // 1. Validamos el ID antes de tocar la BD
+            if (!id || isNaN(id) || parseInt(id) <= 0) {
+                return res.status(400).json({ error: `El parámetro ${paramName} debe ser un número entero válido y mayor a 0` });
+            }
 
-        const instance = await modelo.findByPk(id)
+            // 2. Buscamos en el modelo si existe una instancia con ese ID
+            const instancia = await Modelo.findByPk(id);
 
-        if (!instance) {
-            res.status(404).json({ error_message: `El ${modelo.name} con id ${id} no existe` })
-            return
-        }
+            if (!instancia) {
+                return res.status(404).json({ error: `El recurso con id ${id} en el modelo ${Modelo.name} no existe` });
+            }
 
-        req.instance = instance
-        next()
-    }
-}
+            // 3. Guardamos la instancia para que el controlador la use gratis
+            req.modelo = instancia; 
+            next();
 
-const validarByColumn = (modelo, columnName, paramName, options = {}) => {
+        } catch (error) {
+            console.error(`Error de validación en ${Modelo.name}:`, error);
+            return res.status(500).json({ error: 'Error del servidor' });
+        }   
+    };
+};
+
+//
+const validarTagByName = (modelo, columnName, paramName, options = {}) => {
     const { instanceKey = 'instance', source = 'params' } = options
 
     return async (req, res, next) => {
@@ -46,4 +57,22 @@ const validarByColumn = (modelo, columnName, paramName, options = {}) => {
     }
 }
 
-module.exports = { validarById, validarByColumn }
+
+const validarSchemaPost = (req,res,next) =>{
+    const {error} =  genericSchemaValidator(postSchema,req.body)
+    if(error){
+
+        res.status(400).json({error : error.details.map((e) =>{
+                return {
+                    attributos: e.path[0],
+                    detalle : e.message,
+                }
+            })
+        }) 
+        return 
+    }
+    
+    next()
+}
+
+module.exports = { validarTagByName, validarSchemaPost, validateExistsModel }
