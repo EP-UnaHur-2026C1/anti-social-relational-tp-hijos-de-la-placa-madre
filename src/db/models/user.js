@@ -11,12 +11,14 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Post, {
         foreignKey: "idUser",
         as: "posts",
+        onDelete: 'CASCADE', // <-- CLAVE: Si se borra el usuario, borra sus posts
       });
 
       // 2. Relación 1:M con Comment
       User.hasMany(models.Comment, {
         foreignKey: "idUser",
         as: "comments",
+        onDelete: 'CASCADE',
       });
 
     }
@@ -43,13 +45,30 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       length: 12
+    },
+
+    createdAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+      allowNull: false
+    },
+
+    updatedAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+      allowNull: false
     }
   }, 
 
   {
     sequelize,
     modelName: 'User',
-    timestamps: false,
+    timestamps: true,
+    hooks: {
+      beforeUpdate: (user) => {
+        user.updatedAt = new Date();
+      }
+    }
   }
 );
   return User;

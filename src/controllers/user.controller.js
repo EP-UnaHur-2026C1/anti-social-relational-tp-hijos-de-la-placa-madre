@@ -1,4 +1,4 @@
-const {User} = require('../db/models');
+const { User, Post, PostImage, Tag, Comment} = require('../db/models');
 
 const getAllUsers = async (req, res) => {
     try {
@@ -20,6 +20,42 @@ const getUserById = async (req, res) => {
         res.status(500).json({ error: 'Error del servidor' })
     }
 }
+
+const getPostsByUserId = async (req, res) => {
+    try {
+        const id = req.params.id; 
+
+        const user = await User.findByPk(id, {
+            include: {
+                model: Post,
+                as: 'posts', 
+            
+                include: [
+                    {
+                        model: PostImage,
+                        as: 'Images' // Trae las imágenes del post
+                    },
+                    {
+                        model: Tag,
+                        as: 'Tags', // Trae los tags del post
+                        through: { attributes: [] } // Tip pro: limpia la tabla intermedia para que no tire basura
+                    },
+                    {
+                        model: Comment,
+                        as: 'Comments' // Trae los comentarios del post
+                    }
+                ]
+            }
+        });
+
+        // Devolvemos los posts con todo su contenido adentro
+        return res.status(200).json(user.posts);
+        
+    } catch (error) {
+        console.error("Error exacto en la consulta:", error);
+        return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
 
 const postUser = async (req, res) => {
     try {
@@ -64,4 +100,4 @@ const deleteUser = async (req, res) => {
     }
 }
 
-module.exports = {getAllUsers, getUserById, postUser, putUser, deleteUser}
+module.exports = {getAllUsers, getUserById, getPostsByUserId, postUser, putUser, deleteUser}

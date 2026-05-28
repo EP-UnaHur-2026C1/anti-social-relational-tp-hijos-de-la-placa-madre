@@ -36,7 +36,6 @@ const actualizarFechaPost_ = async (postId) => {
     await post.save()
 }
 
-// luca: Esta validacion queda como defensa extra; la validacion principal esta en commentMiddleware.
 const validarContenido_ = (contenido, res) => {
     if (typeof contenido !== 'string' || contenido.trim() === '') {
         res.status(400).json({ error: 'El contenido del comentario es obligatorio' })

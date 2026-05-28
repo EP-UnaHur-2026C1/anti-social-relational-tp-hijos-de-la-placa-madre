@@ -1,53 +1,69 @@
-const {Router} = require('express')
-const { getPostById, getAllPosts, postNewPost, putPost, deletePost, getAllImages, getImageById, postImages, putImages, deleteImage,deleteAllImages  } = require('../controllers/post.controllers')
-const {validarPostById} = require('../middlewares/postMiddleware')
-const { validarCreateComment, validarUpdateComment } = require('../middlewares/commentMiddleware')
+const { Router } = require('express')
 const router = Router()
 
-// obtener todos los post por id
-router.get('/posts',getAllPosts)
+const { Post, PostImage } = require('../db/models')
+const {
+    getPostById,
+    getAllPosts,
+    postNewPost,
+    putPost,
+    deletePost,
+    getAllImages,
+    getImageById,
+    postImages,
+    putImages,
+    deleteImage,
+    deleteAllImages,
+    addTag,
+    getAllTagsByPostId,
+    unlinkTag,
+} = require('../controllers/post.controllers')
+
+const { validateExistsModel, validarTagByName } = require('../middlewares/genericMiddleware')
+const { sanitizeTagName } = require('../middlewares/tagMiddleware')
+const { validateSchema } = require('../schemas/genericSchemaValidator')
+const { schemaPost } = require('../schemas/postSchema')
+const { schemaPostImage } = require('../schemas/postImage.schema')
+const { schemaTag } = require('../schemas/tag.schema')
+
+// obtener todos los post
+router.get('/posts', getAllPosts)
 
 // obtener un post con cierto id
-
-router.get('/post/:postId',validarPostById,getPostById)
+router.get('/post/:postId', validateExistsModel(Post, 'postId'), getPostById)
 
 // crear un nuevo post
-
-router.post('/post',postNewPost)
+router.post('/post', validateSchema(schemaPost), postNewPost)
 
 // actualizar un post con id
-
-router.put('/posts/:id',validarPostById,putPost)
+router.put('/posts/:id', validateSchema(schemaPost), validateExistsModel(Post), putPost)
 
 // eliminar un post con id
-
-router.delete('/posts/:id',validarPostById,deletePost)
+router.delete('/posts/:id', validateExistsModel(Post), deletePost)
 
 // PARA POST_IMAGES
 
 // obtener todas las imagenes de un post
-router.get('/post/:postId/images',validarPostById, getAllImages)
+router.get('/post/:postId/images', validateExistsModel(Post, 'postId'), getAllImages)
 
-// obtiene una imagen del post por id (?)
+// obtiene una imagen del post por id
+router.get('/post/:postId/images/:imageId', validateExistsModel(Post, 'postId'), validateExistsModel(PostImage, 'imageId'), getImageById)
 
-//como le pasamos el middleware de validar "postId" tambien podriamos pasarle uno para "imageId"
-router.get('/post/:postId/images/:imageId',validarPostById, getImageById)
+// agregar imagenes al post
+router.post('/post/:postId/images', validateExistsModel(Post, 'postId'), validateSchema(schemaPostImage), postImages)
 
-// agregar imagenes al post, una o muchas
-
-router.post('/post/:postId/images', postImages)
-
-// modifica una imagen por id (?)
-
-router.put('/post/:postId/images/:imageId', putImages)
+// modifica una imagen por id
+router.put('/post/:postId/images/:imageId', validateExistsModel(Post, 'postId'), validateExistsModel(PostImage, 'imageId'), validateSchema(schemaPostImage), putImages)
 
 // borra una imagen del post por id
-
-router.delete('/post/:postId/images/:imageId', deleteImage)
+router.delete('/post/:postId/images/:imageId', validateExistsModel(Post, 'postId'), validateExistsModel(PostImage, 'imageId'), deleteImage)
 
 // borra todas las imagenes del post por id
+router.delete('/post/:postId/images', validateExistsModel(Post, 'postId'), deleteAllImages)
 
-router.delete('/post/:postId/images', deleteAllImages)
-
+// Tags
+router.get('/posts/:postId/tags', validateExistsModel(Post, 'postId'), getAllTagsByPostId)
+router.post('/posts/:postId/tags', validateExistsModel(Post, 'postId'), sanitizeTagName, validateSchema(schemaTag), addTag)
+router.delete('/posts/:postId/tags/:tagName', validateExistsModel(Post, 'postId'), sanitizeTagName, validarTagByName, unlinkTag)
 
 module.exports = router

@@ -1,6 +1,5 @@
 const {Router} = require('express')
 const { getCommentsByPost, postCommentByPost, putCommentByPost, deleteCommentByPost } = require('../controllers/comment.controller')
-const {validarPostById} = require('../middlewares/postMiddleware')
 const { validarCreateComment, validarUpdateComment } = require('../middlewares/commentMiddleware')
 const router = Router()
 

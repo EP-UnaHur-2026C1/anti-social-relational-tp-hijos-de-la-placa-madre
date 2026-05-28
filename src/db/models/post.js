@@ -23,10 +23,11 @@ module.exports = (sequelize, DataTypes) => {
         as: 'Comments' });
       
       // 4. Relación M:N con Tag
-      Post.belongsToMany(models.Tag, { 
-        through: 'PostTags', 
-        foreignKey: 'idPost', 
-        as: 'Tags' 
+      Post.belongsToMany(models.Tag, {
+        through: models.PostTag,
+        foreignKey: 'idPost',
+        otherKey: 'idTag',
+        as: 'Tags',
       });
 
     }
@@ -49,6 +50,18 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       length: 100,
       allowNull: false
+    },
+
+    createdAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+      allowNull: false
+    },
+
+    updatedAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+      allowNull: false
     }
     
   }, 
@@ -56,7 +69,13 @@ module.exports = (sequelize, DataTypes) => {
   {
     sequelize,
     modelName: 'Post',
-    timestamps: true
+    timestamps: true,
+    // Este hook se ejecuta antes de cada actualización de un post para actualizar el campo updatedAt automáticamente
+    hooks: {
+      beforeUpdate: (post) => {
+        post.updatedAt = new Date();
+      }
+    }
   });
   return Post;
 };
