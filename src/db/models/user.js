@@ -7,11 +7,30 @@ module.exports = (sequelize, DataTypes) => {
     
     static associate(models) {
 
+      // Relación N:M consigo mismo para representar los seguidores y seguidos (Mis seguidos) - una parte de la relación
+      User.belongsToMany(models.User, {
+        through: 'Follows',
+        as: "Following",
+        foreignKey: "idFollower",
+        otherKey: "idFollowing",
+        onDelete: 'CASCADE', // Si se borra el usuario, borra sus relaciones de seguimiento
+        timestamps: true
+      })
+
+      // Relación N:M consigo mismo para representar los seguidores y seguidos (Mis seguidores) - la otra parte de la relación
+      User.belongsToMany(models.User, {
+        through: 'Follows',
+        as: "Followers",
+        foreignKey: "idFollowing",
+        otherKey: "idFollower",
+        onDelete: 'CASCADE', // Si se borra el usuario, borra sus relaciones de seguimiento
+      })
+
       // 1. Relación 1:M con Post
       User.hasMany(models.Post, {
         foreignKey: "idUser",
         as: "posts",
-        onDelete: 'CASCADE', // <-- CLAVE: Si se borra el usuario, borra sus posts
+        onDelete: 'CASCADE', // Si se borra el usuario, borra sus posts
       });
 
       // 2. Relación 1:M con Comment
