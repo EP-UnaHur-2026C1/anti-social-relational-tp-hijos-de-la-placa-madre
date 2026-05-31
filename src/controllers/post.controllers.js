@@ -179,7 +179,7 @@ const putImages = async (req, res) => {
         url: req.body.urlImages[0]
     }) 
 
-    res.status(201).json(req.body.urlImages[0])
+    res.status(200).json(req.body.urlImages[0])
 
     await actualizarFechaPost_(req.params.postId)
 

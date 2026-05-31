@@ -77,7 +77,7 @@ const putUser = async (req, res) => {
 
         await user.update(userActualizado)
 
-        res.status(201).json(user)
+        res.status(200).json(user)
 
     } catch (error) {
         console.error(error)
