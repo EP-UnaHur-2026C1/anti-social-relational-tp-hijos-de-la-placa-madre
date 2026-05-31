@@ -1,6 +1,6 @@
 const { Post, PostImage, Tag, Comment } = require('../db/models')
 const appCache = require('../services/cache.service');
-const { descargarImagen, eliminarImagen } = require('../services/postimages.services')
+const { descargarImagen, eliminarImagen, eliminarTodasLasImagenesDePostId } = require('../services/postimages.services')
 
 // POST
 
@@ -136,9 +136,12 @@ const putPost = async(req,res) =>{
 const deletePost= async (req,res)=>{
     try{
         const id = req.params.id
-        const post = await Post.findByPk(id)
-    
+        const post = await Post.findByPk(id)    
+
+        await eliminarTodasLasImagenesDePostId(id)
+
         await post.destroy()
+
         
         appCache.del('all_posts_key'); // Invalida la caché de todos los posts porque se eliminó uno
         appCache.del(`post_${id}`); // Invalida la caché del post específico que se eliminó

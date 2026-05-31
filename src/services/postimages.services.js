@@ -2,6 +2,8 @@ const https = require('https');
 const fs = require('fs');
 const fsPromises = require('fs/promises')
 const path = require('path');
+const { PostImage } = require('../db/models');
+
 
 const descargarImagen = (url, nombreArchivo) => {
 
@@ -43,6 +45,20 @@ const eliminarImagen = async (urlImagen) =>{
     await fsPromises.unlink(rutaDeImagen)
 }
 
+const eliminarTodasLasImagenesDePostId = async (postId) => {
+
+    const images = await PostImage.findAll({
+        where:{
+            idPost : postId
+        }
+    })
+
+    for (const img of images){
+        await eliminarImagen(img.url)
+    }
+
+}
+
 module.exports = {
-    descargarImagen, eliminarImagen,
+    descargarImagen, eliminarImagen, eliminarTodasLasImagenesDePostId
 }
