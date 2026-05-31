@@ -5,7 +5,8 @@ const createCommentSchema = Joi.object({
         'number.base': 'El idUser debe ser un numero',
         'number.integer': 'El idUser debe ser un numero entero',
         'number.min': 'El idUser no puede ser menor a 1',
-        'any.required': 'El idUser es obligatorio'
+        'any.required': 'El idUser es obligatorio',
+        'number.empty': 'El idUser no puede estar vacio'
     }),
     contenido: Joi.string().trim().min(1).max(255).required().messages({
         'string.base': 'El contenido debe ser texto',

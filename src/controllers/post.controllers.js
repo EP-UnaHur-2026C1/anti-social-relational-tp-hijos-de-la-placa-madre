@@ -17,7 +17,7 @@ const getAllPosts = async(req,res)=>{
         }
 
         // 2. [Cache Miss]: Si no estaban en la RAM, vamos de forma tradicional a la Base de Datos
-        console.log('🗄️ [Cache Miss]: Consultando a la base de datos de SQLite...');
+        console.log('[Cache Miss]: Consultando a la base de datos de SQLite...');
         const posts = await Post.findAll({
             include: [
                 { 
@@ -206,7 +206,7 @@ const postImages = async (req, res) => {
             idPost: postId
         })) 
         
-        await PostImage.bulkCreate(newImages) //
+        await PostImage.bulkCreate(newImages)
 
         await actualizarFechaPost_(postId)
 
