@@ -48,7 +48,6 @@ module.exports = (sequelize, DataTypes) => {
 
     descripcion: {
       type: DataTypes.TEXT,
-      length: 100,
       allowNull: false
     },
 

@@ -112,13 +112,13 @@ const getUserProfileById = async (req, res) => {
                 {
                     model: User,
                     as: 'Followers', // Este está perfecto porque coincide con el modelo
-                    attributes: ['nickName', 'nombre', 'apellido'],
+                    attributes: ['nickName'],
                     through: { attributes: [] }
                 },
                 {
                     model: User,
                     as: 'Following', // <-- CORREGIDO: Le sacamos la 's' final
-                    attributes: ['nickName', 'nombre', 'apellido'],
+                    attributes: ['nickName'],
                     through: { attributes: [] }
                 }
             ]
