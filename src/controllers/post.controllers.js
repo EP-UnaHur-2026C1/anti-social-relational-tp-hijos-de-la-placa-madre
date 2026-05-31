@@ -1,4 +1,5 @@
 const { Post, PostImage, Tag, Comment } = require('../db/models')
+const { descargarImagen, eliminarImagen } = require('../services/postimages.services')
 
 // POST
 
@@ -129,9 +130,7 @@ const getImageById = async (req, res) => {
             }
         })
 
-        res.status(200).json(image)
-
-        // res.redirect(image.url) // -> esto es para mostrar la imagen por navegador
+        res.status(200).json(image)      
 
     }catch(err){
 
@@ -146,10 +145,20 @@ const postImages = async (req, res) => {
 
         const {urlImages} = req.body 
 
-        const newImages= urlImages.map( url => ({
-            url: url,
-            idPost: req.params.postId
-        })) 
+        const newImages= []
+
+        for (const url of urlImages){
+
+            const nombreArchivo = Date.now() + '-' + Math.random() + '.jpg'
+
+            await descargarImagen(url,nombreArchivo)
+
+            newImages.push({
+                url:`/images/${nombreArchivo}`,
+                idPost: req.params.postId
+            })
+
+        }
         
         await PostImage.bulkCreate(newImages)
 
@@ -165,24 +174,33 @@ const postImages = async (req, res) => {
     }
 }
 
+
 const putImages = async (req, res) => {
     try{
     
     const image = await PostImage.findOne({ 
         where:{
             idPost: req.params.postId,
-            idPostImage: req.params.imageId // <-- CAMBIADO: De idImage a idPostImage 
+            idPostImage: req.params.imageId 
         }
-    })
+    })      
 
+    const urlVieja = image.url
+    const url = req.body.urlImages[0]
+
+    const nombreArchivo = Date.now() + '-' + Math.random() + '.jpg'
+
+    await descargarImagen(url,nombreArchivo)
+            
     await image.update({
-        url: req.body.urlImages[0]
+        url: `/images/${nombreArchivo}`
     }) 
-
-    res.status(201).json(req.body.urlImages[0])
-
+        
+    await eliminarImagen(urlVieja)  
+    
     await actualizarFechaPost_(req.params.postId)
 
+    res.status(200).json(req.body.urlImages[0])
 
     }catch(err){
         console.error(err)
@@ -195,7 +213,9 @@ const deleteImage = async (req, res) => {
     try {
         const image = req.modelo; 
 
-        await image.destroy();
+        await eliminarImagen(image.url)
+
+        await image.destroy();        
 
         await actualizarFechaPost_(req.params.postId);
 
@@ -211,9 +231,23 @@ const deleteAllImages = async (req, res) => {
     try {
         const { postId } = req.params;
 
+        const imagenes = await PostImage.findAll({
+            where:{
+                idPost : postId
+            }
+        })
+
+        if(imagenes.length === 0){
+            return res.status(404).json({message: "el post no tiene imagenes"})
+        }
+
+        for (const image of imagenes){
+            await eliminarImagen(image.url)
+        }
+
         await PostImage.destroy({
-            where: {
-                idPost: postId
+            where :{
+                idPost : postId
             }
         });
 
@@ -323,7 +357,7 @@ const unlinkTag = async (req, res) => {
     }
 };
 
-module.exports = { getPostById, getAllImages, getImageById, postImages, putImages, deleteImage,deleteAllImages,
+module.exports = { getPostById, getAllImages, getImageById, postImages,putImages, deleteImage,deleteAllImages,
     getAllPosts, postNewPost, putPost, deletePost,
     addTag, getAllTagsByPostId, unlinkTag,
 } 

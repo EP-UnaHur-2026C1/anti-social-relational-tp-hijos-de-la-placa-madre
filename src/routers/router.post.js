@@ -10,7 +10,7 @@ const {
     deletePost,
     getAllImages,
     getImageById,
-    postImages,
+    postImages,   
     putImages,
     deleteImage,
     deleteAllImages,

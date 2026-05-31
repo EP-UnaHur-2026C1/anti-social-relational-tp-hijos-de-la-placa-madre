@@ -1,5 +1,7 @@
 node_modules
 data
+public/images/*
+!public/images/.gitkeep
 
 # SQLite local (desarrollo)
 src/db/data/*.sqlite
