@@ -2,7 +2,7 @@ node_modules
 data
 public/images/*
 !public/images/.gitkeep
-
+.env
 # SQLite local (desarrollo)
 src/db/data/*.sqlite
 src/db/data/*.db

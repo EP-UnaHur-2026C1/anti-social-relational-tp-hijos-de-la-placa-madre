@@ -77,7 +77,7 @@ const putUser = async (req, res) => {
 
         await user.update(userActualizado)
 
-        res.status(201).json(user)
+        res.status(200).json(user)
 
     } catch (error) {
         console.error(error)
@@ -100,4 +100,66 @@ const deleteUser = async (req, res) => {
     }
 }
 
-module.exports = {getAllUsers, getUserById, getPostsByUserId, postUser, putUser, deleteUser}
+//Bonus: Followers y Followings (Seguidores y Seguidos)
+
+const getUserProfileById = async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const user = await User.findByPk(id, {
+            attributes: ['nickName', 'nombre', 'apellido'], 
+            include: [
+                {
+                    model: User,
+                    as: 'Followers', // Este está perfecto porque coincide con el modelo
+                    attributes: ['nickName', 'nombre', 'apellido'],
+                    through: { attributes: [] }
+                },
+                {
+                    model: User,
+                    as: 'Following', // <-- CORREGIDO: Le sacamos la 's' final
+                    attributes: ['nickName', 'nombre', 'apellido'],
+                    through: { attributes: [] }
+                }
+            ]
+        });
+
+        res.status(200).json(user);
+    } catch (error) {
+        console.error(error); // Esto te va a mostrar el detalle real del error en la consola de la terminal
+        res.status(500).json({ error: 'Error del servidor' });
+    }
+};
+
+const followUser = async (req, res) => {
+    try {
+
+        const { followerInstance, followingInstance } = req;
+
+        await followerInstance.addFollowing(followingInstance);
+
+        return res.status(200).json({ 
+            message: `¡Ahora ${followerInstance.nickName} sigue a ${followingInstance.nickName}!` 
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Error al procesar el follow" });
+    }
+};
+
+
+const unfollowUser = async (req, res) => {
+    try {
+        const { followerInstance, followingInstance } = req;
+
+        await followerInstance.removeFollowing(followingInstance);
+
+        return res.status(200).json({ message: "Dejaste de seguir a este usuario con éxito" });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Error al procesar el unfollow" });
+    }
+};
+
+module.exports = {getAllUsers, getUserById, getPostsByUserId, postUser, putUser, deleteUser, getUserProfileById, followUser, unfollowUser}

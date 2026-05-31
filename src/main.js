@@ -1,5 +1,6 @@
 const express = require('express');
 const { sequelize } = require('./db/models')
+require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -19,6 +20,10 @@ app.listen(PORT, async () => {
     try {
         await sequelize.authenticate();
         console.log('Conexion a la base de datos verificada.');
+        
+        await sequelize.sync({ force: false });
+        console.log('Modelos sincronizados con la base de datos.');
+    
         console.log(`Aplicacion iniciada exitosamente en el puerto: ${PORT}`);
     } catch (error) {
         console.error('Error al conectar con la base de datos:', error);
