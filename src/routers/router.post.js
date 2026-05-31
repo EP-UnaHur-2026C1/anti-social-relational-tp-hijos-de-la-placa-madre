@@ -25,7 +25,7 @@ const { validateSchema } = require('../schemas/genericSchemaValidator')
 const { schemaPost } = require('../schemas/postSchema')
 const { schemaPostImage } = require('../schemas/postImage.schema')
 const { schemaTag } = require('../schemas/tag.schema')
-const { validatePutImage } = require('../middlewares/validateImage') // para contolar que solo se pase una imagen por body para el put de imagenes
+const { validatePutImage } = require('../middlewares/validateImage') // para controlar que solo se pase una imagen por body para el put de imagenes
 
 // obtener todos los post
 router.get('/posts', getAllPosts)
