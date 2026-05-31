@@ -16,7 +16,7 @@ const validarCreateComment = (req, res, next) => {
     const { error, value } = genericSchemaValidator(createCommentSchema, req.body)
 
     if (error) {
-        return responderErroresDeValidacion_(res, error)
+        return responderErroresDeValidacion_(res, error) 
     }
 
     req.body = value

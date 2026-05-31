@@ -63,7 +63,7 @@ module.exports = (sequelize, DataTypes) => {
 
           const fechaCreacion = new Date(this.get('createdAt')) // la fecha en la que se creo el comentario
 
-          const diasDeLaPublicacion = ( new Date() - fechaCreacion ) / (1000 * 60 * 60 * 24)  // fecha de hoy - fecha que se creo el comentario / el parseo a dias
+          const diasDeLaPublicacion = ( Date.now() - fechaCreacion ) / (1000 * 60 * 60 * 24)  // fecha de hoy - fecha que se creo el comentario / el parseo a dias
 
           return diasDeLaPublicacion <= diasDisponibles // comparamos si la cantidad de dias que tiene el comentario es menor o igual al limite de dias
       }
@@ -71,7 +71,7 @@ module.exports = (sequelize, DataTypes) => {
 
   },
 
-   {
+  {
     sequelize,
     modelName: 'Comment',
     timestamps: true,

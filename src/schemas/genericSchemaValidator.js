@@ -1,5 +1,5 @@
 const genericSchemaValidator = (schema, data) => {
-    const { error, value } = schema.validate(data, { abortEarly: false })
+    const { error, value } = schema.validate(data, { abortEarly: false }) 
     return { error, value }
 }
 
@@ -17,5 +17,5 @@ const validateSchema = (schema) => {
     }
 }
 
-module.exports = genericSchemaValidator
-module.exports.validateSchema = validateSchema
+module.exports = genericSchemaValidator 
+module.exports.validateSchema = validateSchema 
