@@ -37,10 +37,10 @@ router.get('/post/:postId', validateExistsModel(Post, 'postId'), getPostById)
 router.post('/post', validateSchema(schemaPost), postNewPost)
 
 // actualizar un post con id
-router.put('/posts/:id', validateSchema(schemaPost), validateExistsModel(Post), putPost)
+router.put('/post/:id', validateSchema(schemaPost), validateExistsModel(Post), putPost)
 
 // eliminar un post con id
-router.delete('/posts/:id', validateExistsModel(Post), deletePost)
+router.delete('/post/:id', validateExistsModel(Post), deletePost)
 
 // PARA POST_IMAGES
 

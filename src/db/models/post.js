@@ -15,12 +15,18 @@ module.exports = (sequelize, DataTypes) => {
       // 2. Relación 1:N con PostImage
       Post.hasMany(models.PostImage, {
         foreignKey: 'idPost',
-        as: 'Images' });
+        as: 'Images',
+        onDelete: 'CASCADE', // Si se borra un post, se borran sus imágenes
+        hooks: true // Necesario para que el onDelete funcione correctamente
+      });
       
       // 3. Relación 1:N con Comment 
       Post.hasMany(models.Comment, {
         foreignKey: 'idPost', 
-        as: 'Comments' });
+        as: 'Comments',
+        onDelete: 'CASCADE', // Si se borra un post, se borran sus comentarios
+        hooks: true // Necesario para que el onDelete funcione correctamente
+      });
       
       // 4. Relación M:N con Tag
       Post.belongsToMany(models.Tag, {
@@ -28,6 +34,8 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'idPost',
         otherKey: 'idTag',
         as: 'Tags',
+        onDelete: 'CASCADE', // Si se borra un post, se borran sus asociaciones con tags
+        hooks: true // Necesario para que el onDelete funcione correctamente
       });
 
     }

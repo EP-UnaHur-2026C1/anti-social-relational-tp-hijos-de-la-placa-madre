@@ -10,7 +10,7 @@
     "db:migrate:undo:all": "sequelize-cli db:migrate:undo:all",
     "db:seed:all": "sequelize-cli db:seed:all",
     "db:seed:undo:all": "sequelize-cli db:seed:undo:all",
-    "db:reset:dev": "node -e \"if (process.env.NODE_ENV && process.env.NODE_ENV !== 'development') { console.error('db:reset:dev solo con NODE_ENV=development o sin NODE_ENV definido'); process.exit(1); }\" && rm -f ./src/db/data/dev.sqlite && sequelize-cli db:migrate && sequelize-cli db:seed:all"
+    "db:reset:dev": "node -e \"if (process.env.NODE_ENV && process.env.NODE_ENV !== 'development') { console.error('db:reset:dev solo con NODE_ENV=development o sin NODE_ENV definido'); process.exit(1); }\" && rm -f ./src/db/data/dev.sqlite && sequelize-cli db:migrate --config src/db/config/config.js && sequelize-cli db:seed:all --config src/db/config/config.js"
   },
   "author": "Gerardo Gonzalez Tulian",
   "license": "MIT",

@@ -1,4 +1,4 @@
 {
-  "descripcion": "¡Hola Red Social! Este es mi primer posteo oficial desde la API.",
-  "idUser": 1
+    "idUser": 1,
+    "descripcion": "Probando la creación de un nuevo posteo."
 }

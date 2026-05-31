@@ -14,31 +14,31 @@ MÓDULO: PUBLICACIONES (Posts)
 * GET /posts
   - Middlewares: Ninguno.
   - Request (Payload): —
-  - Response (JSON): [get-posts.response.json](./posts/get-posts.response.json)
+  - Response (JSON): [get-posts.response.json](./posts/posts.response/get-posts.response.json)
   - Descripción: Obtiene el listado global de todas las publicaciones con su caché optimizada.
 
 * GET /post/:postId
   - Middlewares: validateExistsModel(Post)
   - Request (Payload): —
-  - Response (JSON): [get-post-id.response.json](./posts/get-post-id.response.json)
+  - Response (JSON): [get-post-id.response.json](./posts/posts.response/get-post-id.response.json)
   - Descripción: Obtiene el detalle de un post específico por su ID.
 
 * POST /post
   - Middlewares: validateSchema(schemaPost)
-  - Request (Payload): [post-post.request.json](./posts/post-post.request.json)
+  - Request (Payload): [post-post.request.json](./posts/posts.request/post-post.request.json)
   - Response (JSON): [post-post.response.json](./posts/post-post.response.json)
   - Descripción: Crea una nueva publicación en la red social. (Invalida caché global).
 
 * PUT /posts/:id
   - Middlewares: validateSchema(schemaPost), validateExistsModel(Post)
-  - Request (Payload): [put-post.request.json](./posts/put-post.request.json)
+  - Request (Payload): [put-post.request.json](./posts/posts.request/put-post.request.json)
   - Response (JSON): [put-post.response.json](./posts/put-post.response.json)
   - Descripción: Modifica el contenido de un post existente. (Invalida caché global e individual).
 
 * DELETE /posts/:id
   - Middlewares: validateExistsModel(Post)
   - Request (Payload): —
-  - Response (JSON): [delete-post.response.json](./posts/delete-post.response.json)
+  - Response (JSON): [delete-post.response.json](./posts/posts.response/delete-post.response.json)
   - Descripción: Elimina un post de la base de datos de forma lógica/física. (Invalida caché global e individual).
 
 
@@ -48,37 +48,37 @@ MÓDULO: IMÁGENES DE PUBLICACIONES (Post Images)
 * GET /post/:postId/images
   - Middlewares: validateExistsModel(Post)
   - Request (Payload): —
-  - Response (JSON): [get-images.response.json](./imagenes/get-images.response.json)
+  - Response (JSON): [get-images.response.json](./imagenes/imagenes.response/get-images.response.json)
   - Descripción: Obtiene todas las URLs de imágenes vinculadas a un post.
 
 * GET /post/:postId/images/:imageId
   - Middlewares: validateExistsModel(Post), validateExistsModel(PostImage)
   - Request (Payload): —
-  - Response (JSON): [get-image-id.response.json](./imagenes/get-image-id.response.json)
+  - Response (JSON): [get-image-id.response.json](./imagenes/imagenes.response/get-image-id.response.json)
   - Descripción: Obtiene el archivo o registro de una imagen específica de un post.
 
 * POST /post/:postId/images
   - Middlewares: validateExistsModel(Post), validateSchema(schemaPostImage)
-  - Request (Payload): [post-images.request.json](./imagenes/post-images.request.json)
+  - Request (Payload): [post-images.request.json](./imagenes/imagenes.request/post-images.request.json)
   - Response (JSON): [post-images.response.json](./imagenes/post-images.response.json)
   - Descripción: Sube y asocia nuevas imágenes a un posteo. (Invalida caché del post).
 
 * PUT /post/:postId/images/:imageId
   - Middlewares: validateExistsModel(Post), validateExistsModel(PostImage), validateSchema(schemaPostImage), validatePutImage
-  - Request (Payload): [put-image.request.json](./imagenes/put-image.request.json)
+  - Request (Payload): [put-image.request.json](./imagenes/imagenes.request/put-image.request.json)
   - Response (JSON): [put-image.response.json](./imagenes/put-image.response.json)
   - Descripción: Reemplaza o modifica los metadatos de una imagen. (Invalida caché del post).
 
 * DELETE /post/:postId/images/:imageId
   - Middlewares: validateExistsModel(Post), validateExistsModel(PostImage)
   - Request (Payload): —
-  - Response (JSON): [delete-image.response.json](./imagenes/delete-image.response.json)
+  - Response (JSON): [delete-image.response.json](./imagenes/imagenes.response/delete-image.response.json)
   - Descripción: Elimina una imagen puntual adjunta al post. (Invalida caché del post).
 
 * DELETE /post/:postId/images
   - Middlewares: validateExistsModel(Post)
   - Request (Payload): —
-  - Response (JSON): [delete-all-images.response.json](./imagenes/delete-all-images.response.json)
+  - Response (JSON): [delete-all-images.response.json](./imagenes/imagenes.response/delete-all-images.response.json)
   - Descripción: Remueve en lote TODAS las imágenes que pertenezcan al posteo. (Invalida caché).
 
 
@@ -88,25 +88,25 @@ MÓDULO: COMENTARIOS (Comments)
 * GET /post/:post_id/comments
   - Middlewares: validateExistsModel(Post)
   - Request (Payload): —
-  - Response (JSON): [get-comments.response.json](./comentarios/get-comments.response.json)
+  - Response (JSON): [get-comments.response.json](./comentarios/comentario.response/get-comments.response.json)
   - Descripción: Trae todos los comentarios asociados a un post específico.
 
 * POST /post/:post_id/comment
   - Middlewares: validateExistsModel(Post), validarCreateComment
-  - Request (Payload): [post-comment.request.json](./comentarios/post-comment.request.json)
-  - Response (JSON): [post-comment.response.json](./comentarios/post-comment.response.json)
+  - Request (Payload): [post-comment.request.json](./comentarios/comentario.request/post-comment.request.json)
+  - Response (JSON): [post-comment.response.json](./comentarios/comentario.response/post-comment.response.json)
   - Descripción: Agrega un nuevo comentario a la publicación. (Invalida caché del post).
 
 * PUT /post/:post_id/comment/:comment_id
   - Middlewares: validateExistsModel(Post), validateExistsModel(Comment), validarUpdateComment
-  - Request (Payload): [put-comment.request.json](./comentarios/put-comment.request.json)
-  - Response (JSON): [put-comment.response.json](./comentarios/put-comment.response.json)
+  - Request (Payload): [put-comment.request.json](./comentarios/comentario.request/put-comment.request.json)
+  - Response (JSON): [put-comment.response.json](./comentarios/comentario.response/put-comment.response.json)
   - Descripción: Modifica un comentario, validando que pertenezca al post indicado. (Invalida caché del post).
 
 * DELETE /post/:post_id/comment/:comment_id
   - Middlewares: validateExistsModel(Post), validateExistsModel(Comment)
   - Request (Payload): —
-  - Response (JSON): [delete-comment.response.json](./comentarios/delete-comment.response.json)
+  - Response (JSON): [delete-comment.response.json](./comentarios/comentario.response/delete-comment.response.json)
   - Descripción: Elimina un comentario específico de un post. (Invalida caché del post).
 
 
@@ -116,25 +116,25 @@ MÓDULO: ETIQUETAS (Tags)
 * GET /tags
   - Middlewares: Ninguno.
   - Request (Payload): —
-  - Response (JSON): [get-tags.response.json](./tags/get-tags.response.json)
+  - Response (JSON): [get-tags.response.json](./tags/tag.response/get-tags.response.json)
   - Descripción: Lista de forma global todos los tags/hashtags creados en la plataforma.
 
 * GET /posts/:postId/tags
   - Middlewares: validateExistsModel(Post)
   - Request (Payload): —
-  - Response (JSON): [get-post-tags.response.json](./tags/get-post-tags.response.json)
+  - Response (JSON): [get-post-tags.response.json](./tags/tag.response/get-post-tags.response.json)
   - Descripción: Obtiene las etiquetas que tiene asignadas un posteo específico.
 
 * POST /posts/:postId/tags
   - Middlewares: validateExistsModel(Post), sanitizeTagName(), validateSchema(schemaTag)
-  - Request (Payload): [post-post-tag.request.json](./tags/post-post-tag.request.json)
-  - Response (JSON): [post-post-tag.response-201.json](./tags/post-post-tag.response-201.json) / [post-post-tag.response-200.json](./tags/post-post-tag.response-200.json)
+  - Request (Payload): [post-post-tag.request.json](./tags/tag.request/post-post-tag.request.json)
+  - Response (JSON): [post-post-tag.response-201.json](./tags/tag.response/post-post-tag.response-201.json) / [post-post-tag.response-200.json](./tags/post-post-tag.response-200.json)
   - Descripción: Crea y vincula un tag a un post (Relación Many-to-Many). (Invalida caché).
 
 * DELETE /posts/:postId/tags/:tagName
   - Middlewares: validateExistsModel(Post), sanitizeTagName(), validarTagByName
   - Request (Payload): —
-  - Response (JSON): [delete-post-tag.response.json](./tags/delete-post-tag.response.json)
+  - Response (JSON): [delete-post-tag.response.json](./tags/tag.response/delete-post-tag.response.json)
   - Descripción: Desvincula un tag específico de un posteo sin borrar el tag global. (Invalida caché).
 
 
@@ -183,20 +183,20 @@ MÓDULO: BONUS (Interacciones y Perfil Completo)
 ------------------------------------------------------------------------
 * GET /usuario/:id/profile
   - Middlewares: validateExistsModel(User)
-  - Request (Payload): —
-  - Response (JSON): [get-user-profile.response.json](./followers/get-user-profile.response.json)
+  - Request (Payload): — 
+  - Response (JSON): [get-user-profile.response.json](./followers/follow.response/get-user-profile.response.json)
   - Descripción: Perfil de Red Social. Trae los datos del usuario cruzados dinámicamente con sus listas de Seguidores (Followers) y Seguidos (Following).
 
 * POST /usuario/:idFollower/follow/:idFollowing
   - Middlewares: validateFollow
-  - Request (Payload): —
-  - Response (JSON): [post-follow.response.json](./followers/post-follow.response.json)
+  - Request (Payload): — 
+  - Response (JSON): [post-follow.response.json](./followers/follow.response/post-follow.response.json)
   - Descripción: Ejecuta la acción donde el usuario idFollower comienza a seguir a idFollowing. Registra la relación en la tabla intermedia.
 
 * POST /usuario/:idFollower/unfollow/:idFollowing
   - Middlewares: validateUnfollow
-  - Request (Payload): —
-  - Response (JSON): [post-unfollow.response.json](./followers/post-unfollow.response.json)
+  - Request (Payload): — 
+  - Response (JSON): [post-unfollow.response.json](./followers/follow.response/post-unfollow.response.json)
   - Descripción: Rompe el vínculo de seguimiento entre el usuario seguidor y el usuario seguido.
 
 ========================================================================
