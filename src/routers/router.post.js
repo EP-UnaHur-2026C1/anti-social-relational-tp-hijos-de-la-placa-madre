@@ -10,7 +10,7 @@ const {
     deletePost,
     getAllImages,
     getImageById,
-    postImages,
+    postImages,   
     putImages,
     deleteImage,
     deleteAllImages,
@@ -25,6 +25,7 @@ const { validateSchema } = require('../schemas/genericSchemaValidator')
 const { schemaPost } = require('../schemas/postSchema')
 const { schemaPostImage } = require('../schemas/postImage.schema')
 const { schemaTag } = require('../schemas/tag.schema')
+const { validatePutImage } = require('../middlewares/validateImage') // para contolar que solo se pase una imagen por body para el put de imagenes
 
 // obtener todos los post
 router.get('/posts', getAllPosts)
@@ -53,7 +54,7 @@ router.get('/post/:postId/images/:imageId', validateExistsModel(Post, 'postId'),
 router.post('/post/:postId/images', validateExistsModel(Post, 'postId'), validateSchema(schemaPostImage), postImages)
 
 // modifica una imagen por id
-router.put('/post/:postId/images/:imageId', validateExistsModel(Post, 'postId'), validateExistsModel(PostImage, 'imageId'), validateSchema(schemaPostImage), putImages)
+router.put('/post/:postId/images/:imageId', validateExistsModel(Post, 'postId'), validateExistsModel(PostImage, 'imageId'), validateSchema(schemaPostImage), validatePutImage, putImages)
 
 // borra una imagen del post por id
 router.delete('/post/:postId/images/:imageId', validateExistsModel(Post, 'postId'), validateExistsModel(PostImage, 'imageId'), deleteImage)

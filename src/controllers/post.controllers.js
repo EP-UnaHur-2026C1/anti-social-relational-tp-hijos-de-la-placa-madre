@@ -1,5 +1,4 @@
 const { Post, PostImage, Tag, Comment } = require('../db/models')
-const appCache = require('../services/cache.service'); // Importamos la caché
 
 // POST
 
@@ -184,9 +183,7 @@ const getImageById = async (req, res) => {
             }
         })
 
-        res.status(200).json(image)
-
-        // res.redirect(image.url) // -> esto es para mostrar la imagen por navegador
+        res.status(200).json(image)      
 
     }catch(err){
 
@@ -203,7 +200,7 @@ const postImages = async (req, res) => {
 
         const newImages= urlImages.map( url => ({
             url: url,
-            idPost: postId
+            idPost: req.params.postId
         })) 
         
         await PostImage.bulkCreate(newImages)
@@ -221,25 +218,25 @@ const postImages = async (req, res) => {
     }
 }
 
+
 const putImages = async (req, res) => {
     try{
     const { postId, imageId } = req.params;
     const image = await PostImage.findOne({ 
         where:{
-            idPost: postId,
-            idPostImage: imageId
+            idPost: req.params.postId,
+            idPostImage: req.params.imageId // <-- CAMBIADO: De idImage a idPostImage 
         }
     })
-    await image.update({
-        url: req.body.urlImages[0]
-    }) 
-    await actualizarFechaPost_(postId)
 
-    appCache.del('all_posts_key');
-    appCache.del(`post_${postId}`);
-    console.log(`[Cache Cleaned]: Se borró la caché del post ${postId} por modificar una imagen`);
-    
+    await image.update({
+        url: `/images/${nombreArchivo}`
+    }) 
+
     res.status(200).json(req.body.urlImages[0])
+
+    await actualizarFechaPost_(req.params.postId)
+
 
     }catch(err){
         console.error(err)
@@ -250,15 +247,9 @@ const putImages = async (req, res) => {
 
 const deleteImage = async (req, res) => {
     try {
-        const { postId, imageId } = req.params;
-        const image = await PostImage.findOne({
-            where: {
-                idPost: postId,
-                idPostImage: imageId
-            }
-        });
+        const image = req.modelo; 
 
-        await image.destroy();
+        await image.destroy();        
 
         await actualizarFechaPost_(postId);
         
@@ -277,9 +268,23 @@ const deleteAllImages = async (req, res) => {
     try {
         const { postId } = req.params;
 
+        const imagenes = await PostImage.findAll({
+            where:{
+                idPost : postId
+            }
+        })
+
+        if(imagenes.length === 0){
+            return res.status(404).json({message: "el post no tiene imagenes"})
+        }
+
+        for (const image of imagenes){
+            await eliminarImagen(image.url)
+        }
+
         await PostImage.destroy({
-            where: {
-                idPost: postId
+            where :{
+                idPost : postId
             }
         });
 
@@ -404,7 +409,7 @@ const unlinkTag = async (req, res) => {
     }
 };
 
-module.exports = { getPostById, getAllImages, getImageById, postImages, putImages, deleteImage,deleteAllImages,
+module.exports = { getPostById, getAllImages, getImageById, postImages,putImages, deleteImage,deleteAllImages,
     getAllPosts, postNewPost, putPost, deletePost,
     addTag, getAllTagsByPostId, unlinkTag,
 } 
